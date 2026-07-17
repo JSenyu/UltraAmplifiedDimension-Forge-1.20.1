@@ -25,3 +25,6 @@ logs
 *.log
 .gitattributes
 deps
+
+# local 1.16.5 reference copy (not versioned)
+/old/
