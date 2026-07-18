@@ -28,18 +28,13 @@ eula.txt
 deps
 local-maven
 
+# local test tooling, smoke-test server, scratch scripts (not versioned)
+/local-test/
+# leftover empty dir if a previous clean-run was locked on Windows
+/clean-run/
+
 # local 1.16.5 reference copy (not versioned)
 /old/
-
-# local scratch / tooling leftovers
-compile_out*.txt
-compile-out.*
-new_java_list.txt
-old_java_list.txt
-tools_*.py
-tools_*.json
-write_mixins.py
-_write_*.py
 
 # local release copies
 dist/
