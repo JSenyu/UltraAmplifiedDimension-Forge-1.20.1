@@ -1,0 +1,18 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 1.0,
+        "feature": {
+          "feature": "minecraft:spruce",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:spruce",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

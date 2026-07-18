@@ -1,0 +1,24 @@
+{
+  "feature": "ultra_amplified_dimension:boulder/small",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 1
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": -1,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

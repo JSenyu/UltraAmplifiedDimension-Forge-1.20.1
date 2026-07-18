@@ -1,0 +1,11 @@
+{
+  "config": {
+    "state": {
+      "Properties": {
+        "level": "0"
+      },
+      "Name": "minecraft:water"
+    }
+  },
+  "type": "ultra_amplified_dimension:lake_wide_shallow"
+}

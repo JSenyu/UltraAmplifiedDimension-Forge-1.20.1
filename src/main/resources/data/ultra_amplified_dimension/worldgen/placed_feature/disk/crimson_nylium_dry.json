@@ -1,0 +1,39 @@
+{
+  "feature": "ultra_amplified_dimension:disk/crimson_nylium_dry",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 20,
+            "weight": 50
+          },
+          {
+            "data": 30,
+            "weight": 50
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 1
+        },
+        "max_inclusive": {
+          "absolute": 74
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

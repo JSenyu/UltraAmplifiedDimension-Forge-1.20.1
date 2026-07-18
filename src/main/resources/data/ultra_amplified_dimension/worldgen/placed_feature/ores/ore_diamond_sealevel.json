@@ -1,0 +1,39 @@
+{
+  "feature": "ultra_amplified_dimension:ores/ore_diamond_sealevel",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 0,
+            "weight": 50
+          },
+          {
+            "data": 1,
+            "weight": 50
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:trapezoid",
+        "min_inclusive": {
+          "absolute": 65
+        },
+        "max_inclusive": {
+          "absolute": 73
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

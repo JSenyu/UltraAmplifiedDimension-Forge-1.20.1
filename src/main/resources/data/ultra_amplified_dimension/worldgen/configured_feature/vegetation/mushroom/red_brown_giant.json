@@ -1,0 +1,18 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": "minecraft:huge_red_mushroom",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:huge_brown_mushroom",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

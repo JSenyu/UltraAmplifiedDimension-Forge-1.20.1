@@ -1,0 +1,8 @@
+{
+  "config": {
+    "max_pickles": 2,
+    "min_pickles": 1,
+    "count": 6
+  },
+  "type": "ultra_amplified_dimension:proper_sea_pickles"
+}

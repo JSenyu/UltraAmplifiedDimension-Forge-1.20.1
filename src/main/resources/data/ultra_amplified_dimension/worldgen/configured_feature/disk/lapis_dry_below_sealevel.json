@@ -1,0 +1,21 @@
+{
+  "config": {
+    "state": {
+      "Name": "minecraft:lapis_block"
+    },
+    "radius": {
+      "base": 1,
+      "spread": 0
+    },
+    "half_height": 0,
+    "targets": [
+      {
+        "Name": "minecraft:ice"
+      },
+      {
+        "Name": "minecraft:packed_ice"
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:disk_dry"
+}

@@ -17,14 +17,29 @@ out
 build
 .gradle
 
-# other
+# run / local game data
 eclipse
 run
 run-data
+run-server-validate
 logs
 *.log
-.gitattributes
+eula.txt
 deps
+local-maven
 
 # local 1.16.5 reference copy (not versioned)
 /old/
+
+# local scratch / tooling leftovers
+compile_out*.txt
+compile-out.*
+new_java_list.txt
+old_java_list.txt
+tools_*.py
+tools_*.json
+write_mixins.py
+_write_*.py
+
+# local release copies
+dist/

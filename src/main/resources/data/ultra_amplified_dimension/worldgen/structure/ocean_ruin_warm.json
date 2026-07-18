@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:ocean_ruin",
+  "biomes": "#ultra_amplified_dimension:has_structure/ocean_ruin_warm",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "biome_temp": "warm",
+  "large_probability": 0.9,
+  "cluster_probability": 0.9
+}

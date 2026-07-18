@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ultra_amplified_dimension:sun_shrine",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 60,
+    "separation": 1,
+    "salt": 1831585669
+  }
+}

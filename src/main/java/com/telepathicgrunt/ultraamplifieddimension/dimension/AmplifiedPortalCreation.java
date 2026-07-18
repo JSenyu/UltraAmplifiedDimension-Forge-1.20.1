@@ -21,22 +21,29 @@ public final class AmplifiedPortalCreation {
 
     public static void portalCreationRightClick(PlayerInteractEvent.RightClickBlock event) {
         Level level = event.getLevel();
-        if (level.isClientSide()) {
-            return;
-        }
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        Player player = (Player) event.getEntity();
+        Player player = event.getEntity();
         if (player.isShiftKeyDown()) {
             return;
         }
-        if (event.getItemStack().is(UADTags.PORTAL_ACTIVATION_ITEMS)) {
-            if (trySpawnPortal(level, event.getPos())) {
-                player.swing(player.getUsedItemHand(), true);
-                event.setCanceled(true);
-                event.setResult(Event.Result.DENY);
-            }
+        if (!event.getItemStack().is(UADTags.PORTAL_ACTIVATION_ITEMS)) {
+            return;
+        }
+        if (!isValid(level, event.getPos())) {
+            return;
+        }
+
+        // Deny flint-and-steel fire placement so it cannot fight portal activation.
+        event.setCanceled(true);
+        event.setUseItem(Event.Result.DENY);
+        event.setUseBlock(Event.Result.DENY);
+
+        if (level.isClientSide()) {
+            player.swing(event.getHand());
+            return;
+        }
+
+        if (trySpawnPortal(level, event.getPos())) {
+            player.swing(event.getHand(), true);
         }
     }
 

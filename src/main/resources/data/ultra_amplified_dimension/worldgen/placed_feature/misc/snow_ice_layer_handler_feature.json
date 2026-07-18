@@ -1,0 +1,8 @@
+{
+  "feature": "ultra_amplified_dimension:misc/snow_ice_layer_handler_feature",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

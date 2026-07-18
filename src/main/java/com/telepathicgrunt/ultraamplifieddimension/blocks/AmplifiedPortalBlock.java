@@ -21,16 +21,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.List;
 
 public class AmplifiedPortalBlock extends Block {
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -52,13 +56,20 @@ public class AmplifiedPortalBlock extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos position, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide
-                && !player.isPassenger()
-                && !player.isVehicle()
-                && player.canChangeDimensions()
-                && !player.isShiftKeyDown()
-                && player.getUsedItemHand() == hand) {
+        // Crouch-click lets players place blocks on the portal.
+        if (player.isShiftKeyDown()
+                || player.isPassenger()
+                || player.isVehicle()
+                || !player.canChangeDimensions()) {
+            return InteractionResult.PASS;
+        }
 
+        // Client: SUCCESS so the arm swings immediately.
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (hand == InteractionHand.MAIN_HAND || player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             MinecraftServer server = player.getServer();
             if (server == null) {
                 return InteractionResult.FAIL;
@@ -161,10 +172,10 @@ public class AmplifiedPortalBlock extends Block {
 
             UADWorldSavedData.get((ServerLevel) level).addPlayer(player, destinationKey, playerVec3Pos, Pair.of(yaw, pitch));
             createLotsOfParticles((ServerLevel) level, player.position(), level.random);
-            return InteractionResult.SUCCESS;
+            return InteractionResult.CONSUME;
         }
 
-        return super.use(state, level, position, player, hand, hit);
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -190,7 +201,13 @@ public class AmplifiedPortalBlock extends Block {
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        return ItemStack.EMPTY;
+        return new ItemStack(Blocks.POLISHED_DIORITE);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        return List.of(new ItemStack(Blocks.POLISHED_DIORITE));
     }
 
     @Override

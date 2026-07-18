@@ -1,0 +1,8 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/tree/swamp_horned",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

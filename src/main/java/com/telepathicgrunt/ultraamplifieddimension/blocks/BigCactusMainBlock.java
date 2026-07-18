@@ -3,10 +3,10 @@ package com.telepathicgrunt.ultraamplifieddimension.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,9 +18,10 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class BigCactusMainBlock extends DirectionalBlock {
+public class BigCactusMainBlock extends Block {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = DirectionProperty.create(
+            "facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP);
     private static final VoxelShape SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
     public BigCactusMainBlock() {
@@ -30,6 +31,12 @@ public class BigCactusMainBlock extends DirectionalBlock {
                 .strength(0.4F)
                 .sound(SoundType.WOOL));
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(FACING, Direction.UP));
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction direction = context.getClickedFace().getOpposite();
+        return this.defaultBlockState().setValue(FACING, direction.getAxis() == Direction.Axis.Y ? Direction.UP : direction);
     }
 
     @Override

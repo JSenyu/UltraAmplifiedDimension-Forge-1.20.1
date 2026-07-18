@@ -1,0 +1,39 @@
+{
+  "feature": "ultra_amplified_dimension:misc/shulker_box_extremely_rare",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 0,
+            "weight": 40
+          },
+          {
+            "data": 1,
+            "weight": 60
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 25
+        },
+        "max_inclusive": {
+          "absolute": 45
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

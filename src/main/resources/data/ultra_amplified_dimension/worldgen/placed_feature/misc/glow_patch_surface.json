@@ -1,0 +1,16 @@
+{
+  "feature": "ultra_amplified_dimension:misc/glow_patch_surface",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.1,
+      "skip_top_ledge": true,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

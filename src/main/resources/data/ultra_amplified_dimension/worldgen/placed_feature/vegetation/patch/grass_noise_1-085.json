@@ -1,0 +1,22 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/patch/grass_noise_1-085",
+  "placement": [
+    {
+      "type": "minecraft:noise_based_count",
+      "noise_to_count_ratio": 1,
+      "noise_factor": 1.0,
+      "noise_offset": 0.0
+    },
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.85,
+      "skip_top_ledge": false,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

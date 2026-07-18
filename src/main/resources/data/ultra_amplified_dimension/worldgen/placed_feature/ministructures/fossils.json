@@ -1,0 +1,21 @@
+{
+  "feature": "ultra_amplified_dimension:ministructures/fossils",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.008,
+      "skip_top_ledge": true,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": -2,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

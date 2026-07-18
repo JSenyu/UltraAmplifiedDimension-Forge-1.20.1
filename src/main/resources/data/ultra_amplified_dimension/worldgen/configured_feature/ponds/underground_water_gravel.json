@@ -1,0 +1,18 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:gravel"
+    },
+    "outside_state": {
+      "Name": "minecraft:stone"
+    },
+    "inside_state": {
+      "Properties": {
+        "level": "0"
+      },
+      "Name": "minecraft:water"
+    },
+    "place_outside_state_often": false
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

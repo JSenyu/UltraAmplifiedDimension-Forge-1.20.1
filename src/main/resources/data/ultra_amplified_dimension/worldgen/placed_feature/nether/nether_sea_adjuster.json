@@ -1,0 +1,8 @@
+{
+  "feature": "ultra_amplified_dimension:nether/nether_sea_adjuster",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "config": {
+    "target": {
+      "tag": "ultra_amplified_dimension:air_target",
+      "predicate_type": "minecraft:tag_match"
+    },
+    "state": {
+      "Properties": {
+        "facing": "up"
+      },
+      "Name": "minecraft:shulker_box"
+    }
+  },
+  "type": "ultra_amplified_dimension:on_solid_block_placer"
+}

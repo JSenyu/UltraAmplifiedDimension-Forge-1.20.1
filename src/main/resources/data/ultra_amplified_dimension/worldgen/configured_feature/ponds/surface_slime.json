@@ -1,0 +1,15 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:slime_block"
+    },
+    "outside_state": {
+      "Name": "minecraft:slime_block"
+    },
+    "inside_state": {
+      "Name": "minecraft:slime_block"
+    },
+    "place_outside_state_often": true
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "ultra_amplified_dimension:underwater_cave",
+  "config": {
+    "probability": 0.2,
+    "y": {
+      "type": "minecraft:uniform",
+      "min_inclusive": {
+        "above_bottom": 8
+      },
+      "max_inclusive": {
+        "absolute": 47
+      }
+    },
+    "yScale": 1.0,
+    "lava_level": {
+      "above_bottom": 11
+    },
+    "replaceable": "#minecraft:overworld_carver_replaceables",
+    "horizontal_radius_multiplier": 1.0,
+    "vertical_radius_multiplier": 1.0,
+    "floor_level": -1.0
+  }
+}

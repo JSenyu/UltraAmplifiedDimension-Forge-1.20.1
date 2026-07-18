@@ -6,15 +6,24 @@ import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.AmplifiedPortalCreation;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.UADDimension;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADBlocks;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADCarvers;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADCreativeTabs;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADFeatures;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADPlacements;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADProcessors;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADTreeDecoratorTypes;
+import com.telepathicgrunt.ultraamplifieddimension.utils.BiomeSetsHelper;
+import com.telepathicgrunt.ultraamplifieddimension.world.carver.CaveCavityCarver;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraft.world.level.biome.BiomeManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,9 +44,15 @@ public class UltraAmplifiedDimension {
         UADCreativeTabs.CREATIVE_TABS.register(modEventBus);
         UADDimension.CHUNK_GENERATORS.register(modEventBus);
         UADDimension.BIOME_SOURCES.register(modEventBus);
+        UADFeatures.FEATURES.register(modEventBus);
+        UADProcessors.STRUCTURE_PROCESSORS.register(modEventBus);
+        UADTreeDecoratorTypes.TREE_DECORATOR_TYPES.register(modEventBus);
+        UADPlacements.PLACEMENT_MODIFIERS.register(modEventBus);
+        UADCarvers.WORLD_CARVERS.register(modEventBus);
 
         forgeBus.addListener(UADDimension::levelTick);
         forgeBus.addListener(AmplifiedPortalCreation::portalCreationRightClick);
+        forgeBus.addListener(this::onServerAboutToStart);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             UltraAmplifiedDimensionClient.subscribeClientEvents(modEventBus);
@@ -47,6 +62,11 @@ public class UltraAmplifiedDimension {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(UADDimension::setupDimension);
+        event.enqueueWork(BiomeSetsHelper::generateBiomeSets);
+    }
+
+    private void onServerAboutToStart(ServerAboutToStartEvent event) {
+        long seed = event.getServer().getWorldData().worldGenOptions().seed();
+        CaveCavityCarver.setSeed(BiomeManager.obfuscateSeed(seed));
     }
 }

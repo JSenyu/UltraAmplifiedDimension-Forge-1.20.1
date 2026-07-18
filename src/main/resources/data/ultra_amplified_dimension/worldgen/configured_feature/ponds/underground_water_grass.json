@@ -1,0 +1,21 @@
+{
+  "config": {
+    "top_state": {
+      "Properties": {
+        "snowy": "false"
+      },
+      "Name": "minecraft:grass_block"
+    },
+    "outside_state": {
+      "Name": "minecraft:dirt"
+    },
+    "inside_state": {
+      "Properties": {
+        "level": "0"
+      },
+      "Name": "minecraft:water"
+    },
+    "place_outside_state_often": false
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

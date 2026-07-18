@@ -1,0 +1,46 @@
+{
+  "config": {
+    "max_radius": 2,
+    "min_radius": 1,
+    "heightmap_spread": false,
+    "boulder_blocks": [
+      {
+        "state": {
+          "Name": "minecraft:infested_stone"
+        },
+        "weight": 5
+      },
+      {
+        "state": {
+          "Name": "minecraft:iron_ore"
+        },
+        "weight": 5
+      },
+      {
+        "state": {
+          "Name": "minecraft:coal_ore"
+        },
+        "weight": 10
+      },
+      {
+        "state": {
+          "Name": "minecraft:mossy_cobblestone"
+        },
+        "weight": 100
+      },
+      {
+        "state": {
+          "Name": "minecraft:cobblestone"
+        },
+        "weight": 350
+      },
+      {
+        "state": {
+          "Name": "minecraft:stone"
+        },
+        "weight": 700
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:boulders"
+}

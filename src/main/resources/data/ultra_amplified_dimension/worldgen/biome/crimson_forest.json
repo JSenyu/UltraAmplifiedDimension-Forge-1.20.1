@@ -33,17 +33,62 @@
     "water_color": 12411469,
     "water_fog_color": 12076846
   },
-  "carvers": {},
+  "carvers": {
+    "air": [
+      "ultra_amplified_dimension:cave_cavity",
+      "ultra_amplified_dimension:nether_ravine",
+      "ultra_amplified_dimension:long_ravine"
+    ],
+    "liquid": []
+  },
   "features": [
+    [
+      "ultra_amplified_dimension:misc/contain_underground_liquids"
+    ],
+    [],
+    [
+      "ultra_amplified_dimension:misc/contain_liquid_for_oceans"
+    ],
     [],
     [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
+    [
+      "ultra_amplified_dimension:dungeons/nether_high",
+      "ultra_amplified_dimension:dungeons/nether_middle",
+      "ultra_amplified_dimension:dungeons/nether_bottom"
+    ],
+    [
+      "ultra_amplified_dimension:nether/ceiling_glowstone",
+      "ultra_amplified_dimension:nether/glowstone",
+      "ultra_amplified_dimension:ores/ore_magma",
+      "ultra_amplified_dimension:ores/ore_magma_sparse",
+      "ultra_amplified_dimension:springs/lava_concealed_nether",
+      "ultra_amplified_dimension:ores/ore_quartz_nether_lower",
+      "ultra_amplified_dimension:springs/lava_ceiling_sparse",
+      "ultra_amplified_dimension:ores/ore_quartz_nether_rare",
+      "ultra_amplified_dimension:ores/ore_quartz_nether_sealevel",
+      "ultra_amplified_dimension:disk/crimson_nylium_dry",
+      "minecraft:ore_gravel_nether",
+      "minecraft:ore_blackstone",
+      "minecraft:ore_gold_nether",
+      "minecraft:ore_ancient_debris_large",
+      "minecraft:ore_debris_small"
+    ],
+    [
+      "ultra_amplified_dimension:nether/patch_fire",
+      "ultra_amplified_dimension:springs/lava_dense_nether",
+      "ultra_amplified_dimension:springs/lava_floor",
+      "ultra_amplified_dimension:vegetation/mushroom/brown_normal_dense",
+      "ultra_amplified_dimension:vegetation/mushroom/red_normal_dense",
+      "ultra_amplified_dimension:nether/weeping_vines",
+      "ultra_amplified_dimension:nether/weeping_vines_deep",
+      "ultra_amplified_dimension:nether/crimson_fungi",
+      "ultra_amplified_dimension:nether/crimson_forest_vegetation",
+      "minecraft:patch_fire"
+    ],
+    [
+      "ultra_amplified_dimension:nether/nether_sea_adjuster",
+      "ultra_amplified_dimension:misc/snow_ice_layer_handler_feature"
+    ],
     [],
     []
   ],

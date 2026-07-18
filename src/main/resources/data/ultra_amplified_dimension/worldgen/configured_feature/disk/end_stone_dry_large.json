@@ -1,0 +1,21 @@
+{
+  "config": {
+    "state": {
+      "Name": "minecraft:end_stone"
+    },
+    "radius": {
+      "base": 7,
+      "spread": 2
+    },
+    "half_height": 3,
+    "targets": [
+      {
+        "Name": "minecraft:dirt"
+      },
+      {
+        "Name": "minecraft:stone"
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:disk_dry"
+}

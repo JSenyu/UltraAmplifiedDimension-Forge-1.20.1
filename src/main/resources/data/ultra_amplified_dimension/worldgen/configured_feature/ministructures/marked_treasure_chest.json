@@ -1,0 +1,6 @@
+{
+  "config": {
+    "loot_table": "ultra_amplified_dimension:chests/marked_treasure_chest"
+  },
+  "type": "ultra_amplified_dimension:marked_treasure_chest"
+}

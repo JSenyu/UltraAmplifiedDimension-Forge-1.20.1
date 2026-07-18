@@ -1,0 +1,16 @@
+{
+  "feature": "ultra_amplified_dimension:ministructures/hanging_ruins_slightly_dense",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.055,
+      "skip_top_ledge": false,
+      "underside_only": true,
+      "water_pos_only": false
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

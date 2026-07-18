@@ -1,0 +1,27 @@
+{
+  "feature": "ultra_amplified_dimension:boulder/small_stone_noise_raised",
+  "placement": [
+    {
+      "type": "minecraft:noise_based_count",
+      "noise_to_count_ratio": 1,
+      "noise_factor": 1.0,
+      "noise_offset": 0.0
+    },
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.75,
+      "skip_top_ledge": false,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": 1,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

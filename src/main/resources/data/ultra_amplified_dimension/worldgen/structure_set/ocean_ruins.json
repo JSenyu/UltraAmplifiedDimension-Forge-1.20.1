@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "ultra_amplified_dimension:ocean_ruin_cold",
+      "weight": 1
+    },
+    {
+      "structure": "ultra_amplified_dimension:ocean_ruin_warm",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 8,
+    "separation": 2,
+    "salt": 12556621
+  }
+}

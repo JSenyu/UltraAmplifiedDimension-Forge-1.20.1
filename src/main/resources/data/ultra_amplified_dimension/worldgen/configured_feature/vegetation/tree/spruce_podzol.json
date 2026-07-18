@@ -1,0 +1,81 @@
+{
+  "config": {
+    "ignore_vines": true,
+    "minimum_size": {
+      "limit": 2,
+      "lower_size": 0,
+      "upper_size": 2,
+      "type": "minecraft:two_layers_feature_size"
+    },
+    "decorators": [
+      {
+        "provider": {
+          "state": {
+            "Properties": {
+              "snowy": "false"
+            },
+            "Name": "minecraft:podzol"
+          },
+          "type": "minecraft:simple_state_provider"
+        },
+        "type": "minecraft:alter_ground"
+      }
+    ],
+    "trunk_provider": {
+      "state": {
+        "Properties": {
+          "axis": "y"
+        },
+        "Name": "minecraft:spruce_log"
+      },
+      "type": "minecraft:simple_state_provider"
+    },
+    "foliage_placer": {
+      "radius": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 2,
+          "max_inclusive": 3
+        }
+      },
+      "offset": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 0,
+          "max_inclusive": 2
+        }
+      },
+      "trunk_height": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 1,
+          "max_inclusive": 2
+        }
+      },
+      "type": "minecraft:spruce_foliage_placer"
+    },
+    "trunk_placer": {
+      "base_height": 6,
+      "height_rand_a": 2,
+      "height_rand_b": 3,
+      "type": "minecraft:straight_trunk_placer"
+    },
+    "foliage_provider": {
+      "state": {
+        "Properties": {
+          "persistent": "false",
+          "distance": "7"
+        },
+        "Name": "minecraft:spruce_leaves"
+      },
+      "type": "minecraft:simple_state_provider"
+    },
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:dirt"
+      }
+    }
+  },
+  "type": "minecraft:tree"
+}

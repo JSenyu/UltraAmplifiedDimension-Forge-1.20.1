@@ -1,0 +1,18 @@
+{
+  "config": {
+    "size": 17,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "tag": "minecraft:base_stone_overworld",
+          "predicate_type": "minecraft:tag_match"
+        },
+        "state": {
+          "Name": "minecraft:diorite"
+        }
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:ellipsoid_pocket"
+}

@@ -1,8 +1,9 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/ultra-amplified-mod"
-credits="Special thanks to all the Forge tutorials and debugging help from other modders!"
+issueTrackerURL="https://github.com/JSenyu/UltraAmplifiedDimension-Forge-1.16/issues"
+displayURL="https://github.com/JSenyu/UltraAmplifiedDimension-Forge-1.16"
+credits="${mod_credits}"
 
 [[mods]]
 modId="${mod_id}"

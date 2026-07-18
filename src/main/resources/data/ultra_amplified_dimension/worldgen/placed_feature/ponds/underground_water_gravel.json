@@ -1,0 +1,39 @@
+{
+  "feature": "ultra_amplified_dimension:ponds/underground_water_gravel",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 0,
+            "weight": 70
+          },
+          {
+            "data": 1,
+            "weight": 30
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 6
+        },
+        "max_inclusive": {
+          "absolute": 250
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

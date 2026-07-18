@@ -1,0 +1,18 @@
+{
+  "config": {
+    "size": 20,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "tag": "ultra_amplified_dimension:dirt_like",
+          "predicate_type": "minecraft:tag_match"
+        },
+        "state": {
+          "Name": "minecraft:dirt"
+        }
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:ellipsoid_pocket"
+}

@@ -1,0 +1,16 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/patch/sugar_cane",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 6,
+      "valid_spot_chance": 0.8,
+      "skip_top_ledge": true,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

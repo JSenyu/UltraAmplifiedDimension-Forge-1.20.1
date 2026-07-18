@@ -1,0 +1,17 @@
+{
+  "config": {
+    "top_block": {
+      "Name": "minecraft:sand"
+    },
+    "middle_block": {
+      "Name": "minecraft:sandstone"
+    },
+    "bottom_block": {
+      "Name": "minecraft:sandstone"
+    },
+    "max_height": 100,
+    "min_height": 10,
+    "is_snowy": true
+  },
+  "type": "ultra_amplified_dimension:column_vertical"
+}

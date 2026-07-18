@@ -1,0 +1,20 @@
+{
+  "feature": "ultra_amplified_dimension:misc/icebergs",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:water_ice_surface_placer",
+      "column_passes": 3,
+      "valid_spot_chance": 0.373,
+      "skip_top_ledge": false,
+      "include_ice_placement": false
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": 0,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.33333334,
+        "feature": {
+          "feature": "minecraft:pine",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "ultra_amplified_dimension:vegetation/tree/spruce_podzol",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

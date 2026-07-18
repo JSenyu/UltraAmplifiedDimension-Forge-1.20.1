@@ -1,0 +1,16 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/patch/tall_grass_large_fern",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 1,
+      "valid_spot_chance": 0.85,
+      "skip_top_ledge": false,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

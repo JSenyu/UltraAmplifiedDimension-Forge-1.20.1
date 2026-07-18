@@ -15,7 +15,7 @@ public class UADCreativeTabs {
     public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register("main_tab",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + UltraAmplifiedDimension.MODID + ".main_tab"))
-                    .icon(() -> new ItemStack(UADBlocks.GLOWSTONE_ORE.get()))
+                    .icon(() -> new ItemStack(UADBlocks.AMPLIFIED_PORTAL.get()))
                     .displayItems((params, output) -> {
                         UADBlocks.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })

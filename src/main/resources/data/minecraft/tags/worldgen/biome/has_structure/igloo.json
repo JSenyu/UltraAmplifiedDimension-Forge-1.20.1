@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "ultra_amplified_dimension:frozen_desert",
+    "ultra_amplified_dimension:ice_spikes",
+    "ultra_amplified_dimension:iced_terrain",
+    "ultra_amplified_dimension:snowy_taiga",
+    "ultra_amplified_dimension:snowy_taiga_relic",
+    "ultra_amplified_dimension:snowy_taiga_rocky",
+    "ultra_amplified_dimension:snowy_tundra"
+  ]
+}

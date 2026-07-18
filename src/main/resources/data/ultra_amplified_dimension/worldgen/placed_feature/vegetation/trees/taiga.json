@@ -1,0 +1,21 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/trees/taiga",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 14,
+      "valid_spot_chance": 0.9,
+      "skip_top_ledge": false,
+      "underside_only": false,
+      "water_pos_only": false
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": 1,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "ultra_amplified_dimension:ocean",
+    "ultra_amplified_dimension:ocean_cold",
+    "ultra_amplified_dimension:ocean_cold_deep",
+    "ultra_amplified_dimension:ocean_deep",
+    "ultra_amplified_dimension:ocean_frozen",
+    "ultra_amplified_dimension:ocean_frozen_deep",
+    "ultra_amplified_dimension:ocean_lukewarm",
+    "ultra_amplified_dimension:ocean_lukewarm_deep",
+    "ultra_amplified_dimension:ocean_warm",
+    "ultra_amplified_dimension:ocean_warm_deep"
+  ]
+}

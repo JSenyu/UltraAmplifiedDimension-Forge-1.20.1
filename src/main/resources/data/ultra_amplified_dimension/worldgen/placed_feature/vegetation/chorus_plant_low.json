@@ -1,0 +1,27 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/chorus_plant_low",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 45
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 10
+        },
+        "max_inclusive": {
+          "absolute": 65
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

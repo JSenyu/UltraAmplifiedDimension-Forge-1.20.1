@@ -1,0 +1,28 @@
+{
+  "feature": "ultra_amplified_dimension:springs/ice_waterfall",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 46
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:biased_to_bottom",
+        "min_inclusive": {
+          "absolute": 1
+        },
+        "max_inclusive": {
+          "absolute": 256
+        },
+        "inner": 1
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

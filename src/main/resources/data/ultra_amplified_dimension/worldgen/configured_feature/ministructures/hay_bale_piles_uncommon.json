@@ -1,0 +1,16 @@
+{
+  "config": {
+    "solid_land_radius": 3,
+    "nbt_entries": [
+      {
+        "resourcelocation": "ultra_amplified_dimension:hay_bale_pile/large_hay",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "ultra_amplified_dimension:hay_bale_pile/small_hay",
+        "weight": 1
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:nbt_feature"
+}

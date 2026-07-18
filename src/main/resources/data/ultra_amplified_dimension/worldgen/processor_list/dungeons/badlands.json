@@ -1,0 +1,91 @@
+{
+  "processors": [
+    {
+      "rules": [
+        {
+          "output_state": {
+            "Name": "minecraft:red_sandstone"
+          },
+          "input_predicate": {
+            "block": "minecraft:red_terracotta",
+            "probability": 0.25,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        },
+        {
+          "output_state": {
+            "Name": "minecraft:cut_red_sandstone"
+          },
+          "input_predicate": {
+            "block": "minecraft:orange_terracotta",
+            "probability": 0.5,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        },
+        {
+          "output_state": {
+            "Name": "minecraft:orange_terracotta"
+          },
+          "input_predicate": {
+            "block": "minecraft:smooth_red_sandstone",
+            "probability": 0.75,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        },
+        {
+          "output_state": {
+            "Name": "minecraft:cave_air"
+          },
+          "input_predicate": {
+            "block": "minecraft:air",
+            "predicate_type": "minecraft:block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        }
+      ],
+      "processor_type": "minecraft:rule"
+    },
+    {
+      "spawner_mob_entries": [
+        {
+          "resourcelocation": "minecraft:husk",
+          "weight": 48
+        },
+        {
+          "resourcelocation": "minecraft:cave_spider",
+          "weight": 25
+        },
+        {
+          "resourcelocation": "minecraft:zombie",
+          "weight": 25
+        },
+        {
+          "resourcelocation": "minecraft:creeper",
+          "weight": 1
+        },
+        {
+          "resourcelocation": "minecraft:illusioner",
+          "weight": 1
+        }
+      ],
+      "processor_type": "ultra_amplified_dimension:spawner_randomizing_processor"
+    },
+    {
+      "processor_type": "ultra_amplified_dimension:replace_air_only_processor"
+    },
+    {
+      "processor_type": "ultra_amplified_dimension:remove_floating_blocks_processor"
+    }
+  ]
+}

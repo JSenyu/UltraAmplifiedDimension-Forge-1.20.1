@@ -1,0 +1,18 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.8,
+        "feature": {
+          "feature": "minecraft:acacia",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:oak",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

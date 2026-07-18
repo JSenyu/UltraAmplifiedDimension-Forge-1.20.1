@@ -1,0 +1,15 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:packed_ice"
+    },
+    "outside_state": {
+      "Name": "minecraft:packed_ice"
+    },
+    "inside_state": {
+      "Name": "minecraft:ice"
+    },
+    "place_outside_state_often": false
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

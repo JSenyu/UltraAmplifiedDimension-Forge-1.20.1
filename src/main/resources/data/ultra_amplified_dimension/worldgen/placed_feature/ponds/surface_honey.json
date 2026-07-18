@@ -1,0 +1,29 @@
+{
+  "feature": "ultra_amplified_dimension:ponds/surface_honey",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 1
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": -1,
+      "yspread": 1
+    },
+    {
+      "type": "ultra_amplified_dimension:range_validation_placer",
+      "max_Y": 170,
+      "min_Y": 75
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

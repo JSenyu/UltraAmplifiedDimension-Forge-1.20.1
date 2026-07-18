@@ -1,0 +1,65 @@
+{
+  "processors": [
+    {
+      "rules": [
+        {
+          "output_state": {
+            "Name": "minecraft:nether_bricks"
+          },
+          "input_predicate": {
+            "block": "minecraft:nether_brick_slab",
+            "probability": 0.25,
+            "predicate_type": "minecraft:random_block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        },
+        {
+          "output_state": {
+            "Name": "minecraft:cave_air"
+          },
+          "input_predicate": {
+            "block": "minecraft:air",
+            "predicate_type": "minecraft:block_match"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          }
+        }
+      ],
+      "processor_type": "minecraft:rule"
+    },
+    {
+      "spawner_mob_entries": [
+        {
+          "resourcelocation": "minecraft:zombified_piglin",
+          "weight": 44
+        },
+        {
+          "resourcelocation": "minecraft:magma_cube",
+          "weight": 25
+        },
+        {
+          "resourcelocation": "minecraft:strider",
+          "weight": 20
+        },
+        {
+          "resourcelocation": "minecraft:blaze",
+          "weight": 10
+        },
+        {
+          "resourcelocation" : "minecraft:wither_skeleton",
+          "weight": 1
+        }
+      ],
+      "processor_type": "ultra_amplified_dimension:spawner_randomizing_processor"
+    },
+    {
+      "processor_type": "ultra_amplified_dimension:replace_air_only_processor"
+    },
+    {
+      "processor_type": "ultra_amplified_dimension:remove_floating_blocks_processor"
+    }
+  ]
+}

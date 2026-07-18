@@ -1,0 +1,15 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:honeycomb_block"
+    },
+    "outside_state": {
+      "Name": "minecraft:honeycomb_block"
+    },
+    "inside_state": {
+      "Name": "minecraft:honey_block"
+    },
+    "place_outside_state_often": true
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

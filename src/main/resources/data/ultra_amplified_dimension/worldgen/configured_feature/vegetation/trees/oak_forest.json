@@ -1,0 +1,25 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.2,
+        "feature": {
+          "feature": "minecraft:birch_bees_0002",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.1,
+        "feature": {
+          "feature": "minecraft:fancy_oak_bees_0002",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:oak_bees_0002",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

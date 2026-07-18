@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "ultra_amplified_dimension:badlands",
+    "ultra_amplified_dimension:badlands_dense_woods",
+    "ultra_amplified_dimension:badlands_dissected_plateau",
+    "ultra_amplified_dimension:badlands_sandless",
+    "ultra_amplified_dimension:badlands_spiky",
+    "ultra_amplified_dimension:badlands_woods"
+  ]
+}

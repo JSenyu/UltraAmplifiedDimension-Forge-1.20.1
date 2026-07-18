@@ -1,0 +1,47 @@
+{
+  "config": {
+    "tries": 64,
+    "xz_spread": 7,
+    "y_spread": 3,
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "entries": [
+              {
+                "weight": 3,
+                "data": {
+                  "Properties": {
+                    "half": "lower"
+                  },
+                  "Name": "minecraft:tall_grass"
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Properties": {
+                    "half": "lower"
+                  },
+                  "Name": "minecraft:large_fern"
+                }
+              }
+            ],
+            "type": "minecraft:weighted_state_provider"
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    }
+  },
+  "type": "minecraft:random_patch"
+}

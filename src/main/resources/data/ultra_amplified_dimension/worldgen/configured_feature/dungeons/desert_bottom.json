@@ -1,0 +1,25 @@
+{
+  "config": {
+    "replace_air": false,
+    "min_air_space": 1,
+    "max_air_space": 14,
+    "max_num_of_chests": 2,
+    "chest_loottable_resourcelocation": "ultra_amplified_dimension:chests/dungeon/desert",
+    "dungeon_nbt_entries": [
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/desert_1",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/desert_2",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/desert_3",
+        "weight": 1
+      }
+    ],
+    "processors": "ultra_amplified_dimension:dungeons/desert"
+  },
+  "type": "ultra_amplified_dimension:nbt_dungeon"
+}

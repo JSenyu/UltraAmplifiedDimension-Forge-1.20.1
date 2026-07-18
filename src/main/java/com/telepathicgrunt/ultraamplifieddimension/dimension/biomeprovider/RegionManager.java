@@ -9,7 +9,12 @@ import net.minecraft.world.level.biome.Biome;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class RegionManager {
     public static final Codec<RegionManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -38,6 +43,14 @@ public class RegionManager {
     private final int coolWeight;
     private final int icyWeight;
 
+    private final Map<Holder<Biome>, Holder<Biome>> subBiomeMap = new HashMap<>();
+    private final Map<Holder<Biome>, Holder<Biome>> shoreMap = new HashMap<>();
+    private final Map<Holder<Biome>, Holder<Biome>> borderMap = new HashMap<>();
+    private final Map<Holder<Biome>, Holder<Biome>> mutatedMap = new HashMap<>();
+    private final Map<Holder<Biome>, Holder<Biome>> mutatedSubBiomeMap = new HashMap<>();
+    private final Map<Holder<Biome>, Holder<Biome>> mutatedBorderBiomeMap = new HashMap<>();
+    private final Set<Holder<Biome>> oceanBiomes = new HashSet<>();
+
     public RegionManager(
             List<BiomeGroup> oceanList,
             List<BiomeGroup> endList,
@@ -47,13 +60,13 @@ public class RegionManager {
             List<BiomeGroup> coolList,
             List<BiomeGroup> icyList
     ) {
-        this.oceanList = prepare(oceanList);
-        this.endList = prepare(endList);
-        this.netherList = prepare(netherList);
-        this.hotList = prepare(hotList);
-        this.warmList = prepare(warmList);
-        this.coolList = prepare(coolList);
-        this.icyList = prepare(icyList);
+        this.oceanList = prepareAndPopulateMaps(oceanList, true);
+        this.endList = prepareAndPopulateMaps(endList, false);
+        this.netherList = prepareAndPopulateMaps(netherList, false);
+        this.hotList = prepareAndPopulateMaps(hotList, false);
+        this.warmList = prepareAndPopulateMaps(warmList, false);
+        this.coolList = prepareAndPopulateMaps(coolList, false);
+        this.icyList = prepareAndPopulateMaps(icyList, false);
 
         this.oceanWeight = sumWeight(this.oceanList);
         this.endWeight = sumWeight(this.endList);
@@ -64,13 +77,47 @@ public class RegionManager {
         this.icyWeight = sumWeight(this.icyList);
     }
 
-    private static List<BiomeGroup> prepare(List<BiomeGroup> input) {
+    private List<BiomeGroup> prepareAndPopulateMaps(List<BiomeGroup> input, boolean trackOceanBiomes) {
         if (input == null || input.isEmpty()) {
             throw new JsonSyntaxException("Empty biome region in Ultra Amplified Dimension dimension JSON.");
         }
         List<BiomeGroup> copy = new ArrayList<>(input);
         copy.sort(BiomeGroup::compareTo);
+
+        for (BiomeGroup group : copy) {
+            Holder<Biome> mainBiome = group.getMainBiome();
+            if (trackOceanBiomes) {
+                registerOceanBiome(mainBiome);
+                group.getSubBiome().ifPresent(this::registerOceanBiome);
+                group.getBorderBiome().ifPresent(this::registerOceanBiome);
+                group.getMutatedBiome().ifPresent(this::registerOceanBiome);
+                group.getMutatedSubBiome().ifPresent(this::registerOceanBiome);
+                group.getMutatedBorderBiome().ifPresent(this::registerOceanBiome);
+            }
+
+            group.getShoreBiome().ifPresent(shore -> checkBeforeAddingBiome(shoreMap, mainBiome, shore));
+            group.getBorderBiome().ifPresent(border -> checkBeforeAddingBiome(borderMap, mainBiome, border));
+            group.getSubBiome().ifPresent(sub -> checkBeforeAddingBiome(subBiomeMap, mainBiome, sub));
+            group.getMutatedBiome().ifPresent(mutated -> checkBeforeAddingBiome(mutatedMap, mainBiome, mutated));
+            group.getMutatedSubBiome().ifPresent(mutatedSub -> checkBeforeAddingBiome(mutatedSubBiomeMap, mainBiome, mutatedSub));
+            group.getMutatedBorderBiome().ifPresent(mutatedBorder -> checkBeforeAddingBiome(mutatedBorderBiomeMap, mainBiome, mutatedBorder));
+        }
         return copy;
+    }
+
+    private void registerOceanBiome(Holder<Biome> biome) {
+        oceanBiomes.add(biome);
+    }
+
+    private void checkBeforeAddingBiome(Map<Holder<Biome>, Holder<Biome>> biomeMap, Holder<Biome> mainBiome, Holder<Biome> biomeToAdd) {
+        Holder<Biome> existing = biomeMap.get(mainBiome);
+        if (existing != null) {
+            if (existing != biomeToAdd) {
+                throw new JsonSyntaxException("A single biome was found multiple times in the \"main_biome\" entry with different border/sub/mutated biomes for it in Ultra Amplified Dimension's dimension json.");
+            }
+        } else {
+            biomeMap.put(mainBiome, biomeToAdd);
+        }
     }
 
     private static int sumWeight(List<BiomeGroup> list) {
@@ -84,7 +131,7 @@ public class RegionManager {
 
     public BiomeGroup pickByNoise(Region region, double noise01) {
         Pair<List<BiomeGroup>, Integer> pair = regionPair(region);
-        double clamped = Math.max(0.0D, Math.min(1.0D, noise01));
+        double clamped = Math.max(0.0D, Math.min(0.999999999D, noise01));
         int target = (int) Math.floor(clamped * Math.max(pair.getRight(), 1));
         if (target >= pair.getRight()) {
             target = pair.getRight() - 1;
@@ -113,6 +160,22 @@ public class RegionManager {
             }
         }
         return list.get(index);
+    }
+
+    public boolean isOceanBiome(Holder<Biome> biome) {
+        return oceanBiomes.contains(biome);
+    }
+
+    public Optional<Holder<Biome>> getShore(Holder<Biome> mainBiome) {
+        return Optional.ofNullable(shoreMap.get(mainBiome));
+    }
+
+    public Optional<Holder<Biome>> getBorder(Holder<Biome> mainBiome) {
+        return Optional.ofNullable(borderMap.get(mainBiome));
+    }
+
+    public Optional<Holder<Biome>> getMutatedBorder(Holder<Biome> mainBiome) {
+        return Optional.ofNullable(mutatedBorderBiomeMap.get(mainBiome));
     }
 
     public List<Holder<Biome>> allBiomes() {

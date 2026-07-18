@@ -1,0 +1,18 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:stone"
+    },
+    "outside_state": {
+      "Name": "minecraft:stone"
+    },
+    "inside_state": {
+      "Properties": {
+        "level": "0"
+      },
+      "Name": "minecraft:lava"
+    },
+    "place_outside_state_often": true
+  },
+  "type": "ultra_amplified_dimension:pond"
+}

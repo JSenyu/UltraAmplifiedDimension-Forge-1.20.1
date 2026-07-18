@@ -1,0 +1,34 @@
+{
+  "config": {
+    "state": {
+      "Name": "minecraft:warped_nylium"
+    },
+    "radius": {
+      "base": 5,
+      "spread": 2
+    },
+    "half_height": 1,
+    "exposed_only": true,
+    "targets": [
+      {
+        "Name": "minecraft:netherrack"
+      },
+      {
+        "Name": "minecraft:soul_sand"
+      },
+      {
+        "Name": "minecraft:soul_soil"
+      },
+      {
+        "Properties": {
+          "axis": "y"
+        },
+        "Name": "minecraft:basalt"
+      },
+      {
+        "Name": "minecraft:blackstone"
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:disk_dry"
+}

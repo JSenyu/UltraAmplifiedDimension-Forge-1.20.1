@@ -1,0 +1,25 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.6,
+        "feature": {
+          "feature": "ultra_amplified_dimension:vegetation/tree/mega_spruce",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.2,
+        "feature": {
+          "feature": "minecraft:pine",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:spruce",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

@@ -1,0 +1,16 @@
+{
+  "config": {
+    "top_block": {
+      "Name": "minecraft:andesite"
+    },
+    "middle_block": {
+      "Name": "minecraft:stone"
+    },
+    "bottom_block": {
+      "Name": "minecraft:stone"
+    },
+    "max_height": 100,
+    "min_height": 10
+  },
+  "type": "ultra_amplified_dimension:column_vertical"
+}

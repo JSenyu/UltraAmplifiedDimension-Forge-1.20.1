@@ -1,0 +1,18 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.95,
+        "feature": {
+          "feature": "ultra_amplified_dimension:vegetation/tree/swamp_horned",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "ultra_amplified_dimension:vegetation/tree/swamp",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

@@ -26,7 +26,7 @@ public class UADBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, UltraAmplifiedDimension.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, UltraAmplifiedDimension.MODID);
 
-    public static final RegistryObject<Block> AMPLIFIED_PORTAL = createBlock("amplified_portal", AmplifiedPortalBlock::new, false);
+    public static final RegistryObject<Block> AMPLIFIED_PORTAL = createBlock("amplified_portal", AmplifiedPortalBlock::new, true);
     public static final RegistryObject<Block> GLOWSTONE_ORE = createBlock("glowstone_ore", GlowstoneOreBlock::new, true);
     public static final RegistryObject<Block> COARSE_GLOWDIRT = createBlock("coarse_glowdirt", CoarseGlowdirtBlock::new, true);
     public static final RegistryObject<Block> GLOWDIRT = createBlock("glowdirt", GlowdirtBlock::new, true);

@@ -1,0 +1,21 @@
+{
+  "config": {
+    "size": 7,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "tag": "minecraft:base_stone_overworld",
+          "predicate_type": "minecraft:tag_match"
+        },
+        "state": {
+          "Properties": {
+            "lit": "false"
+          },
+          "Name": "minecraft:redstone_ore"
+        }
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:ellipsoid_pocket"
+}

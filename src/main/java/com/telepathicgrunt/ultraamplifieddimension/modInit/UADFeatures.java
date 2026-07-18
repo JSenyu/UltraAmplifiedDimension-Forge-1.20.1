@@ -1,0 +1,69 @@
+package com.telepathicgrunt.ultraamplifieddimension.modInit;
+
+import com.telepathicgrunt.ultraamplifieddimension.UltraAmplifiedDimension;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.*;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.BambooConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.BlockWithRuleReplaceConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.BoulderFeatureConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.ColumnConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.CountConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.DiskDryConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.GiantSpikeConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.HeightConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.LootTableConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.NbtDungeonConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.NbtFeatureConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.PondConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.ProbabilityAndCountConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.RootConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.SeaPickleConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.TwoBlockStateConfig;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+
+
+public class UADFeatures {
+    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, UltraAmplifiedDimension.MODID);
+
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> CONTAIN_LIQUID_FOR_OCEANS = FEATURES.register("contain_liquid_for_oceans", () -> new ContainLiquidForOceans(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> CONTAIN_UNDERGROUND_LIQUIDS = FEATURES.register("contain_underground_liquids", () -> new ContainUndergroundLiquids(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<HeightConfig>> BIG_CACTUS = FEATURES.register("big_cactus", () -> new BigCactus(HeightConfig.CODEC));
+    public static final RegistryObject<Feature<TwoBlockStateConfig>> NON_LIQUID_WATERFALL = FEATURES.register("non_liquid_waterfall", () -> new NonLiquidWaterfall(TwoBlockStateConfig.CODEC));
+    public static final RegistryObject<Feature<ColumnConfig>> COLUMN_RAMP = FEATURES.register("column_ramp", () -> new ColumnRamp(ColumnConfig.CODEC));
+    public static final RegistryObject<Feature<ColumnConfig>> COLUMN_VERTICAL = FEATURES.register("column_vertical", () -> new ColumnVertical(ColumnConfig.CODEC));
+    public static final RegistryObject<Feature<CountConfig>> GLOW_PATCH = FEATURES.register("glow_patch", () -> new GlowPatch(CountConfig.CODEC));
+    public static final RegistryObject<Feature<BlockStateConfiguration>> LAKE_WIDE_SHALLOW = FEATURES.register("lake_wide_shallow", () -> new LakeWideShallow(BlockStateConfiguration.CODEC));
+    public static final RegistryObject<Feature<NbtFeatureConfig>> NBT_FEATURE = FEATURES.register("nbt_feature", () -> new NbtFeature(NbtFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<NbtDungeonConfig>> NBT_DUNGEON = FEATURES.register("nbt_dungeon", () -> new NbtDungeon(NbtDungeonConfig.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> NETHER_SEA_ADJUSTER = FEATURES.register("nether_sea_adjuster", () -> new NetherSeaAdjuster(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> NETHER_LAVA_SPOT = FEATURES.register("nether_lava_spot", () -> new NetherLavaSpot(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<RootConfig>> ROOTS = FEATURES.register("roots", () -> new Roots(RootConfig.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SNOW_ICE_LAYER_HANDLER_FEATURE = FEATURES.register("snow_ice_layer_handler_feature", () -> new SnowIceLayerHandlerFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SNOW_ICE_ALL_LAYERS = FEATURES.register("snow_ice_all_layers", () -> new SnowIceAllLayers(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SNOW_ICE_TOP_LAYER = FEATURES.register("snow_ice_top_layer", () -> new SnowIceTopLayer(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SNOW_LAYER_WITHOUT_ICE = FEATURES.register("snow_layer_without_ice", () -> new SnowLayerWithoutIceFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<DiskDryConfig>> DISK_DRY = FEATURES.register("disk_dry", () -> new DiskDry(DiskDryConfig.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> SWAMP_CROSS = FEATURES.register("swamp_cross", () -> new SwampCross(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<TreeConfiguration>> TREE_SWAMP_HORNED = FEATURES.register("tree_swamp_horned", () -> new TreeSwampHorned(TreeConfiguration.CODEC));
+    public static final RegistryObject<Feature<OreConfiguration>> ELLIPSOID_POCKET = FEATURES.register("ellipsoid_pocket", () -> new EllipsoidPocket(OreConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> VINES_LONG = FEATURES.register("vines_long", () -> new VinesLong(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<HeightConfig>> VINES_SHORT = FEATURES.register("vines_short", () -> new VinesShort(HeightConfig.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> HANGING_RUINS = FEATURES.register("hanging_ruins", () -> new HangingRuins(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<PondConfig>> POND = FEATURES.register("pond", () -> new Pond(PondConfig.CODEC));
+    public static final RegistryObject<Feature<BambooConfig>> SAFE_BAMBOO = FEATURES.register("safe_bamboo", () -> new SafeBamboo(BambooConfig.CODEC));
+    public static final RegistryObject<Feature<TreeConfiguration>> TREE_GIANT_DARK_OAK = FEATURES.register("tree_giant_dark_oak", () -> new TreeGiantDarkOak(TreeConfiguration.CODEC));
+    public static final RegistryObject<Feature<BlockWithRuleReplaceConfig>> ON_SOLID_BLOCK_PLACER = FEATURES.register("on_solid_block_placer", () -> new OnSolidBlockPlacer(BlockWithRuleReplaceConfig.CODEC));
+    public static final RegistryObject<Feature<ProbabilityAndCountConfig>> PROPER_SEAGRASS = FEATURES.register("proper_seagrass", () -> new ProperSeagrass(ProbabilityAndCountConfig.CODEC));
+    public static final RegistryObject<Feature<SeaPickleConfig>> PROPER_SEAPICKLES = FEATURES.register("proper_sea_pickles", () -> new ProperSeapickle(SeaPickleConfig.CODEC));
+    public static final RegistryObject<Feature<ProbabilityAndCountConfig>> PROPER_KELP = FEATURES.register("proper_kelp", () -> new ProperKelp(ProbabilityAndCountConfig.CODEC));
+    public static final RegistryObject<Feature<BoulderFeatureConfig>> BOULDERS = FEATURES.register("boulders", () -> new Boulders(BoulderFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<GiantSpikeConfig>> GIANT_SPIKE = FEATURES.register("giant_spike", () -> new GiantSpike(GiantSpikeConfig.CODEC));
+    public static final RegistryObject<Feature<BlockStateConfiguration>> ICEBERG_WITHOUT_AIR = FEATURES.register("iceberg_without_air", () -> new IcebergWithoutAir(BlockStateConfiguration.CODEC));
+    public static final RegistryObject<Feature<LootTableConfig>> MARKED_TREASURE_CHEST = FEATURES.register("marked_treasure_chest", () -> new MarkedTreasureChest(LootTableConfig.CODEC));
+}

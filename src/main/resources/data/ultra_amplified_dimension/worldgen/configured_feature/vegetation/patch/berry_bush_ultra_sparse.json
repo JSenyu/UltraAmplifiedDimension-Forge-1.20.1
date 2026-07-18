@@ -1,0 +1,33 @@
+{
+  "config": {
+    "tries": 64,
+    "xz_spread": 7,
+    "y_spread": 3,
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "state": {
+              "Properties": {
+                "age": "3"
+              },
+              "Name": "minecraft:sweet_berry_bush"
+            },
+            "type": "minecraft:simple_state_provider"
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    }
+  },
+  "type": "minecraft:random_patch"
+}

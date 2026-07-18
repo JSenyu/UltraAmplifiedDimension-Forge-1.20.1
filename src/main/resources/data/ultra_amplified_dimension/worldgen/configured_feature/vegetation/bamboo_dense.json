@@ -1,0 +1,9 @@
+{
+  "config": {
+    "max_height": 21,
+    "min_height": 8,
+    "podzol_max_radius": 3,
+    "podzol_min_radius": 1
+  },
+  "type": "ultra_amplified_dimension:safe_bamboo"
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "ultra_amplified_dimension:gravelly_columns_relic",
+    "ultra_amplified_dimension:gravelly_fields",
+    "ultra_amplified_dimension:rocky_fields",
+    "ultra_amplified_dimension:rocky_fields_wooded",
+    "ultra_amplified_dimension:stone_plains"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "feature": "ultra_amplified_dimension:vegetation/roots/oak",
+  "placement": [
+    {
+      "type": "ultra_amplified_dimension:ledge_surface_placer",
+      "column_passes": 5,
+      "valid_spot_chance": 1.0,
+      "skip_top_ledge": false,
+      "underside_only": true,
+      "water_pos_only": false
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": 0,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.21,
+        "feature": {
+          "feature": "ultra_amplified_dimension:vegetation/tree/tall_birch_bees_002",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.12,
+        "feature": {
+          "feature": "minecraft:super_birch_bees_0002",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.43333,
+        "feature": {
+          "feature": "ultra_amplified_dimension:vegetation/tree/mega_birch",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:birch_bees_0002",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

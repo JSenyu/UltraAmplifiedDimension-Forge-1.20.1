@@ -1,0 +1,32 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.07,
+        "feature": {
+          "feature": {
+            "config": {
+              "state": {
+                "Name": "minecraft:blue_ice"
+              }
+            },
+            "type": "ultra_amplified_dimension:iceberg_without_air"
+          },
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": {
+        "config": {
+          "state": {
+            "Name": "minecraft:packed_ice"
+          }
+        },
+        "type": "ultra_amplified_dimension:iceberg_without_air"
+      },
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

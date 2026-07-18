@@ -1,0 +1,41 @@
+{
+  "config": {
+    "solid_land_radius": 0,
+    "processors": "ultra_amplified_dimension:fossils/decay",
+    "nbt_entries": [
+      {
+        "resourcelocation": "minecraft:fossil/spine_1",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/spine_2",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/spine_3",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/spine_4",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/skull_1",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/skull_2",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/skull_3",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "minecraft:fossil/skull_4",
+        "weight": 1
+      }
+    ]
+  },
+  "type": "ultra_amplified_dimension:nbt_feature"
+}

@@ -1,0 +1,46 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.05,
+        "feature": {
+          "feature": "minecraft:huge_brown_mushroom",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.025,
+        "feature": {
+          "feature": "minecraft:huge_red_mushroom",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.6666667,
+        "feature": {
+          "feature": "minecraft:dark_oak",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.2,
+        "feature": {
+          "feature": "minecraft:birch",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.1,
+        "feature": {
+          "feature": "minecraft:fancy_oak",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:oak",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

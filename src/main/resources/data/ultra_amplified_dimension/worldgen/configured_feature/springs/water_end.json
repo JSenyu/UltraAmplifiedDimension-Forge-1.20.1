@@ -1,0 +1,24 @@
+{
+  "config": {
+    "requires_block_below": true,
+    "rock_count": 4,
+    "hole_count": 1,
+    "valid_blocks": [
+      "minecraft:stone",
+      "minecraft:granite",
+      "minecraft:diorite",
+      "minecraft:andesite",
+      "minecraft:sandstone",
+      "minecraft:red_sandstone",
+      "minecraft:end_stone",
+      "minecraft:end_stone_bricks"
+    ],
+    "state": {
+      "Properties": {
+        "falling": "true"
+      },
+      "Name": "minecraft:water"
+    }
+  },
+  "type": "minecraft:spring_feature"
+}

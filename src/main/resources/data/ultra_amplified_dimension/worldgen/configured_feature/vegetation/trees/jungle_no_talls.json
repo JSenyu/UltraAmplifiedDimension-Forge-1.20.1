@@ -1,0 +1,25 @@
+{
+  "config": {
+    "features": [
+      {
+        "chance": 0.1,
+        "feature": {
+          "feature": "minecraft:fancy_oak_bees_005",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": "minecraft:jungle_bush",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "minecraft:jungle_tree",
+      "placement": []
+    }
+  },
+  "type": "minecraft:random_selector"
+}

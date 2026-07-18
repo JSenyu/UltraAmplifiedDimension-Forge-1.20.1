@@ -1,0 +1,19 @@
+{
+  "config": {
+    "top_block": {
+      "Properties": {
+        "snowy": "false"
+      },
+      "Name": "minecraft:grass_block"
+    },
+    "middle_block": {
+      "Name": "minecraft:dirt"
+    },
+    "bottom_block": {
+      "Name": "minecraft:stone"
+    },
+    "max_height": 7,
+    "min_height": 2
+  },
+  "type": "ultra_amplified_dimension:column_ramp"
+}

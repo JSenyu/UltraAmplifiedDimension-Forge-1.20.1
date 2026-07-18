@@ -1,0 +1,36 @@
+{
+  "feature": "ultra_amplified_dimension:boulder/small_stone_sparse",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 0,
+            "weight": 80
+          },
+          {
+            "data": 1,
+            "weight": 20
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "ultra_amplified_dimension:y_offset_placer",
+      "yoffset": -1,
+      "yspread": 0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

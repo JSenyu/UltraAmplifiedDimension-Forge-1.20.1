@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ultra_amplified_dimension:ice_spike_temple",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 9,
+    "separation": 2,
+    "salt": 1435761947
+  }
+}

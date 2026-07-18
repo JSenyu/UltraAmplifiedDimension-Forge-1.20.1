@@ -1,0 +1,25 @@
+{
+  "config": {
+    "replace_air": false,
+    "min_air_space": 1,
+    "max_air_space": 14,
+    "max_num_of_chests": 2,
+    "chest_loottable_resourcelocation": "minecraft:chests/simple_dungeon",
+    "dungeon_nbt_entries": [
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/generic_1",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/generic_2",
+        "weight": 1
+      },
+      {
+        "resourcelocation": "ultra_amplified_dimension:dungeons/generic_3",
+        "weight": 1
+      }
+    ],
+    "processors": "ultra_amplified_dimension:dungeons/generic"
+  },
+  "type": "ultra_amplified_dimension:nbt_dungeon"
+}

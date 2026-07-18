@@ -1,0 +1,115 @@
+{
+  "config": {
+    "features": [
+      {
+        "feature": {
+          "config": {
+            "tries": 64,
+            "xz_spread": 7,
+            "y_spread": 3,
+            "feature": {
+              "feature": {
+                "type": "minecraft:simple_block",
+                "config": {
+                  "to_place": {
+                    "state": {
+                      "Properties": {
+                        "half": "lower"
+                      },
+                      "Name": "minecraft:lilac"
+                    },
+                    "type": "minecraft:simple_state_provider"
+                  }
+                }
+              },
+              "placement": [
+                {
+                  "type": "minecraft:block_predicate_filter",
+                  "predicate": {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": "minecraft:air"
+                  }
+                }
+              ]
+            }
+          },
+          "type": "minecraft:random_patch"
+        },
+        "placement": []
+      },
+      {
+        "feature": {
+          "config": {
+            "tries": 64,
+            "xz_spread": 7,
+            "y_spread": 3,
+            "feature": {
+              "feature": {
+                "type": "minecraft:simple_block",
+                "config": {
+                  "to_place": {
+                    "state": {
+                      "Properties": {
+                        "half": "lower"
+                      },
+                      "Name": "minecraft:rose_bush"
+                    },
+                    "type": "minecraft:simple_state_provider"
+                  }
+                }
+              },
+              "placement": [
+                {
+                  "type": "minecraft:block_predicate_filter",
+                  "predicate": {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": "minecraft:air"
+                  }
+                }
+              ]
+            }
+          },
+          "type": "minecraft:random_patch"
+        },
+        "placement": []
+      },
+      {
+        "feature": {
+          "config": {
+            "tries": 64,
+            "xz_spread": 7,
+            "y_spread": 3,
+            "feature": {
+              "feature": {
+                "type": "minecraft:simple_block",
+                "config": {
+                  "to_place": {
+                    "state": {
+                      "Properties": {
+                        "half": "lower"
+                      },
+                      "Name": "minecraft:peony"
+                    },
+                    "type": "minecraft:simple_state_provider"
+                  }
+                }
+              },
+              "placement": [
+                {
+                  "type": "minecraft:block_predicate_filter",
+                  "predicate": {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": "minecraft:air"
+                  }
+                }
+              ]
+            }
+          },
+          "type": "minecraft:random_patch"
+        },
+        "placement": []
+      }
+    ]
+  },
+  "type": "minecraft:simple_random_selector"
+}

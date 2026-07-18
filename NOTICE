@@ -1,0 +1,21 @@
+Ultra Amplified Dimension
+=========================
+
+Copyright (C) TelepathicGrunt and contributors
+Copyright (C) JSenyu (Minecraft 1.20.1 Forge port / maintenance)
+
+This project is licensed under the GNU Lesser General Public License v3.0
+(LGPL-3.0). See the LICENSE file for the full license text.
+
+Original author: TelepathicGrunt
+Original CurseForge page:
+  https://www.curseforge.com/minecraft/mc-mods/ultra-amplified-mod
+
+This repository is a community port of the Forge 1.16.5 codebase to
+Minecraft 1.20.1 (Forge). It retains the original LGPL-3.0 license and
+attribution requirements.
+
+When redistributing this mod (source or binaries), you must:
+  - Keep the LICENSE and NOTICE files
+  - Preserve copyright and attribution notices
+  - Provide corresponding source for LGPL-covered modifications when required

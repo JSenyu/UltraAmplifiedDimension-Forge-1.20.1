@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ultra_amplified_dimension:mushroom_temple",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 9,
+    "separation": 2,
+    "salt": 1340434666
+  }
+}

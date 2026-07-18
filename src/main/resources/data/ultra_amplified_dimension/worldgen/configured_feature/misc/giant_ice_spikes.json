@@ -1,0 +1,18 @@
+{
+  "config": {
+    "target": {
+      "tag": "ultra_amplified_dimension:ice_spike_target",
+      "predicate_type": "minecraft:tag_match"
+    },
+    "above_sea_state": {
+      "Name": "minecraft:packed_ice"
+    },
+    "below_sea_state": {
+      "Name": "minecraft:ice"
+    },
+    "giant_spike_max_height": 130,
+    "giant_spike_min_height": 30,
+    "giant_spike_chance": 0.025
+  },
+  "type": "ultra_amplified_dimension:giant_spike"
+}

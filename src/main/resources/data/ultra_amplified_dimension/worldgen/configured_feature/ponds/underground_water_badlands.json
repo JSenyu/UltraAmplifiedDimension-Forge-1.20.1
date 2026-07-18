@@ -1,0 +1,18 @@
+{
+  "config": {
+    "top_state": {
+      "Name": "minecraft:red_sand"
+    },
+    "outside_state": {
+      "Name": "minecraft:terracotta"
+    },
+    "inside_state": {
+      "Properties": {
+        "level": "0"
+      },
+      "Name": "minecraft:water"
+    },
+    "place_outside_state_often": false
+  },
+  "type": "ultra_amplified_dimension:pond"
+}
