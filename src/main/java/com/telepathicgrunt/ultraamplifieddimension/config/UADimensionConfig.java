@@ -12,6 +12,14 @@ public class UADimensionConfig {
 	public static ForgeConfigSpec.BooleanValue forceExitToOverworld;
 	public static ForgeConfigSpec.BooleanValue allowNetherPortal;
 
+	public static ForgeConfigSpec.IntValue biomeSize;
+	public static ForgeConfigSpec.DoubleValue subBiomeRate;
+	public static ForgeConfigSpec.DoubleValue mutatedBiomeRate;
+
+	public static ForgeConfigSpec.BooleanValue enableUadDimension;
+	public static ForgeConfigSpec.BooleanValue setUadAsDefaultDimension;
+	public static ForgeConfigSpec.BooleanValue overrideVanillaOverworld;
+
 	static {
 		ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
 		setupConfig(configBuilder);
@@ -19,49 +27,75 @@ public class UADimensionConfig {
 	}
 
 	private static void setupConfig(ForgeConfigSpec.Builder builder) {
+		builder.comment("Appearance and portal options").push("General Dimension Options");
 
-		builder.push("General Dimension Options");
+		heavyFog = builder
+				.comment("heavy fog (not distance fog)")
+				.translation("ultraamplified.config.dimension.heavyfog")
+				.define("heavyFog", false);
 
-			heavyFog = builder
-					.comment("\n Adds very heavy fog to make the world look more spooky and limit visibility.",
-							" This is not the same as distance fog which only applies weakly to chunks in the far distance.")
-					.translation("ultraamplified.config.dimension.heavyfog")
-					.define("heavyFog", false);
+		cloudHeight = builder
+				.comment("cloud height (default 245)")
+				.translation("ultraamplified.config.dimension.cloudheight")
+				.defineInRange("cloudHeight", 245, -64, 512);
 
-			cloudHeight = builder
-					.comment("\n Maximum height for clouds to be at.",
-							" Default is 245.")
-					.translation("ultraamplified.config.dimension.cloudheight")
-					.defineInRange("cloudHeight", 245, -64, 512);
+		netherLighting = builder
+				.comment("nether-style lighting")
+				.translation("ultraamplified.config.dimension.netherlighting")
+				.define("netherLighting", false);
 
+		skyType = builder
+				.comment("sky type: NORMAL, END, or NONE")
+				.translation("ultraamplified.config.dimension.skytype")
+				.define("skyType", "NORMAL");
 
-			netherLighting = builder
-					.comment("\n Darkens the dimension to be Nether's lighting which is darker skylight but has ambient lighting.")
-					.translation("ultraamplified.config.dimension.netherlighting")
-					.define("netherLighting", false);
+		allowNetherPortal = builder
+				.comment("allow nether portals inside UAD")
+				.translation("ultraamplified.config.dimension.allownetherportal")
+				.define("allowNetherPortal", false);
 
+		forceExitToOverworld = builder
+				.comment("amplified portal always exits to overworld")
+				.translation("ultraamplified.config.dimension.forceexittooverworld")
+				.define("forceExitToOverworld", false);
 
-			skyType = builder
-					.comment("\n What sky type the dimension should use. Only values allowed are NORMAL, END, and NONE.")
-					.translation("ultraamplified.config.dimension.skytype")
-					.define("skyType", "NORMAL");
+		builder.pop();
 
-			allowNetherPortal = builder
-					.comment("\n Lets Nether Portals be able to be created in Ultra Amplified Dimension.",
-							" Using the portal in this dimension will take you to the Nether but Nether",
-							" Portals in the Nether will take you to the Overworld instead. So this option",
-							" is good if you want a second way of escaping the Ultra Amplified Dimension.")
-					.translation("ultraamplified.config.dimension.allownetherportal")
-					.define("allowNetherPortal", false);
+		builder.comment("biome scale").push("Biome Size");
 
-			forceExitToOverworld = builder
-					.comment("\n Makes leaving the Ultra Amplified dimension by Amplified Portal Block",
-							" always places you back in the Overworld regardless of which dimension you",
-							" originally came from. Use this option if this dimension becomes locked in",
-							" with another dimension so you are stuck teleporting between the two and cannot",
-							" get back to the Overworld.")
-					.translation("ultraamplified.config.dimension.forceexittooverworld")
-					.define("forceExitToOverworld", false);
+		biomeSize = builder
+				.comment("biome size 1-20 (default 20; closer to 1.16.5). new chunks only")
+				.translation("ultraamplified.config.biome.biomesize")
+				.defineInRange("biomeSize", 20, 1, 20);
+
+		subBiomeRate = builder
+				.comment("sub-biome chance (default 0.44)")
+				.translation("ultraamplified.config.biome.subbiomerate")
+				.defineInRange("subBiomeRate", 0.44D, 0.0D, 1.0D);
+
+		mutatedBiomeRate = builder
+				.comment("mutated biome chance (default 0.42)")
+				.translation("ultraamplified.config.biome.mutatedbiomerate")
+				.defineInRange("mutatedBiomeRate", 0.42D, 0.0D, 1.0D);
+
+		builder.pop();
+
+		builder.comment("overworld integration").push("World Integration");
+
+		enableUadDimension = builder
+				.comment("enable extra UAD dimension (default true). false disables portal travel to it")
+				.translation("ultraamplified.config.world.enableuaddimension")
+				.define("enableUadDimension", true);
+
+		setUadAsDefaultDimension = builder
+				.comment("default world type uses UAD overworld; vanilla kept as original_overworld; portals stay. ignored if overrideVanillaOverworld")
+				.translation("ultraamplified.config.world.setuadasdefaultdimension")
+				.define("setUadAsDefaultDimension", false);
+
+		overrideVanillaOverworld = builder
+				.comment("replace overworld generation with UAD; disables amplified portals. overrides setUadAsDefaultDimension")
+				.translation("ultraamplified.config.world.overridevanillaoverworld")
+				.define("overrideVanillaOverworld", false);
 
 		builder.pop();
 	}

@@ -25,6 +25,9 @@ public final class AmplifiedPortalCreation {
         if (player.isShiftKeyDown()) {
             return;
         }
+        if (!OverworldIntegration.portalsEnabled()) {
+            return;
+        }
         if (!event.getItemStack().is(UADTags.PORTAL_ACTIVATION_ITEMS)) {
             return;
         }

@@ -2,6 +2,7 @@ package com.telepathicgrunt.ultraamplifieddimension.dimension;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.biomeprovider.BiomeGroup;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.biomeprovider.RegionManager;
 import com.telepathicgrunt.ultraamplifieddimension.utils.OpenSimplexNoise;
@@ -99,9 +100,36 @@ public class UADBiomeSource extends BiomeSource {
         return applyEdgeVariants(quartX, quartZ, center);
     }
 
+    private int effectiveBiomeSize() {
+        try {
+            return UADimensionConfig.biomeSize.get();
+        } catch (IllegalStateException | NullPointerException ignored) {
+            return this.biomeSize;
+        }
+    }
+
+    private float effectiveSubBiomeRate() {
+        try {
+            return UADimensionConfig.subBiomeRate.get().floatValue();
+        } catch (IllegalStateException | NullPointerException ignored) {
+            return this.subBiomeRate;
+        }
+    }
+
+    private float effectiveMutatedBiomeRate() {
+        try {
+            return UADimensionConfig.mutatedBiomeRate.get().floatValue();
+        } catch (IllegalStateException | NullPointerException ignored) {
+            return this.mutatedBiomeRate;
+        }
+    }
+
     private BiomeSample sampleBaseBiome(int quartX, int quartZ) {
         NoiseFields n = noise();
-        double regionScale = 4.2D * this.biomeSize;
+        int size = effectiveBiomeSize();
+        float subRate = effectiveSubBiomeRate();
+        float mutatedRate = effectiveMutatedBiomeRate();
+        double regionScale = 4.2D * size;
         double biomeScale = Math.max(1.0D, regionScale / 3.0D);
         double nx = quartX / regionScale;
         double nz = quartZ / regionScale;
@@ -123,8 +151,8 @@ public class UADBiomeSource extends BiomeSource {
         double detail = (n.detail().eval(bx * 1.7D, bz * 1.7D) + 1.0D) * 0.5D;
         double mutation = (n.mutation().eval(bx * 1.3D + 50.0D, bz * 1.3D - 50.0D) + 1.0D) * 0.5D;
 
-        boolean useSub = detail < subBiomeRate;
-        boolean useMutated = mutation < mutatedBiomeRate;
+        boolean useSub = detail < subRate;
+        boolean useMutated = mutation < mutatedRate;
 
         Holder<Biome> biome;
         if (useMutated && useSub) {
@@ -155,7 +183,7 @@ public class UADBiomeSource extends BiomeSource {
 
         for (BiomeSample neighbor : new BiomeSample[]{north, south, west, east}) {
             if (center.region() == neighbor.region() && center.mainBiome() != neighbor.mainBiome()) {
-                if (center.mutation() < mutatedBiomeRate) {
+                if (center.mutation() < effectiveMutatedBiomeRate()) {
                     Optional<Holder<Biome>> mutatedBorder = regionManager.getMutatedBorder(center.mainBiome());
                     if (mutatedBorder.isPresent()) {
                         return mutatedBorder.get();
@@ -189,7 +217,7 @@ public class UADBiomeSource extends BiomeSource {
 
     private RegionManager.Region smoothRegion(int quartX, int quartZ, RegionManager.Region center) {
         NoiseFields n = noise();
-        double scale = 4.2D * biomeSize;
+        double scale = 4.2D * effectiveBiomeSize();
         RegionManager.Region north = computeRawRegion(n, quartX, quartZ - 1, quartX / scale, (quartZ - 1) / scale);
         RegionManager.Region south = computeRawRegion(n, quartX, quartZ + 1, quartX / scale, (quartZ + 1) / scale);
         RegionManager.Region west = computeRawRegion(n, quartX - 1, quartZ, (quartX - 1) / scale, quartZ / scale);
@@ -240,7 +268,13 @@ public class UADBiomeSource extends BiomeSource {
         return null;
     }
 
-    private static boolean hasRegionNeighbor(RegionManager.Region north, RegionManager.Region south, RegionManager.Region west, RegionManager.Region east, RegionManager.Region target) {
+    private static boolean hasRegionNeighbor(
+            RegionManager.Region north,
+            RegionManager.Region south,
+            RegionManager.Region west,
+            RegionManager.Region east,
+            RegionManager.Region target
+    ) {
         return north == target || south == target || west == target || east == target;
     }
 

@@ -105,5 +105,7 @@
   "text.autoconfig.ultra_amplified_dimension.option.allowNetherPortal": "Allow Nether Portals",
   "text.autoconfig.ultra_amplified_dimension.option.allowNetherPortal.@PrefixText": "\n\nLets Nether Portals be able to be created in Ultra Amplified Dimension. Using the portal in this dimension will take you to the Nether but Nether Portals in the Nether will take you to the Overworld instead. So this option is good if you want a second way of escaping the Ultra Amplified Dimension.",
   "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld": "Force Exit To Overworld",
-  "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld.@PrefixText": "\n\nMakes leaving the Ultra Amplified Dimension by Amplified Portal Block always places you back in the Overworld regardless of which dimension you originally came from. Use this option if this dimension becomes locked in with another dimension so you are stuck teleporting between the two and cannot get back to the Overworld"
+  "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld.@PrefixText": "\n\nMakes leaving the Ultra Amplified Dimension by Amplified Portal Block always places you back in the Overworld regardless of which dimension you originally came from. Use this option if this dimension becomes locked in with another dimension so you are stuck teleporting between the two and cannot get back to the Overworld",
+  "generator.ultra_amplified_dimension.ultra_amplified": "Ultra Amplified",
+  "dimension.ultra_amplified_dimension.original_overworld": "Original Overworld"
 }

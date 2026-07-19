@@ -5,6 +5,7 @@ import com.telepathicgrunt.ultraamplifieddimension.capabilities.CapabilityPlayer
 import com.telepathicgrunt.ultraamplifieddimension.capabilities.IPlayerPosAndDim;
 import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.AmplifiedPortalCreation;
+import com.telepathicgrunt.ultraamplifieddimension.dimension.OverworldIntegration;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.UADDimension;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.UADWorldSavedData;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADBlocks;
@@ -74,16 +75,41 @@ public class AmplifiedPortalBlock extends Block {
             if (server == null) {
                 return InteractionResult.FAIL;
             }
+            if (!OverworldIntegration.portalsEnabled()) {
+                return InteractionResult.FAIL;
+            }
 
-            IPlayerPosAndDim cap = player.getCapability(CapabilityPlayerPosAndDim.PAST_POS_AND_DIM)
-                    .orElseThrow(IllegalStateException::new);
+            IPlayerPosAndDim cap = player.getCapability(CapabilityPlayerPosAndDim.PAST_POS_AND_DIM).orElse(null);
+            if (cap == null) {
+                return InteractionResult.FAIL;
+            }
 
             ResourceKey<Level> destinationKey;
             float pitch;
             float yaw;
             boolean enteringUA;
+            boolean uadAsOverworld = OverworldIntegration.usesOriginalOverworldPortal(server);
 
-            if (player.level().dimension().equals(UADDimension.UAD_WORLD_KEY)) {
+            if (uadAsOverworld) {
+                if (player.level().dimension().equals(OverworldIntegration.ORIGINAL_OVERWORLD_KEY)) {
+                    destinationKey = Level.OVERWORLD;
+                    pitch = cap.getUAPitch();
+                    yaw = cap.getUAYaw();
+                    enteringUA = true;
+                    cap.setNonUAPos(player.position());
+                    cap.setNonUADim(player.level().dimension());
+                    cap.setNonUAPitch(player.getXRot());
+                    cap.setNonUAYaw(player.getYRot());
+                } else {
+                    destinationKey = OverworldIntegration.ORIGINAL_OVERWORLD_KEY;
+                    pitch = cap.getNonUAPitch();
+                    yaw = cap.getNonUAYaw();
+                    enteringUA = false;
+                    cap.setUAPos(player.position());
+                    cap.setUAPitch(player.getXRot());
+                    cap.setUAYaw(player.getYRot());
+                }
+            } else if (player.level().dimension().equals(UADDimension.UAD_WORLD_KEY)) {
                 destinationKey = UADimensionConfig.forceExitToOverworld.get() || cap.getNonUADim() == null
                         ? Level.OVERWORLD
                         : cap.getNonUADim();
@@ -94,6 +120,9 @@ public class AmplifiedPortalBlock extends Block {
                 cap.setUAPitch(player.getXRot());
                 cap.setUAYaw(player.getYRot());
             } else {
+                if (!UADimensionConfig.enableUadDimension.get()) {
+                    return InteractionResult.FAIL;
+                }
                 destinationKey = UADDimension.UAD_WORLD_KEY;
                 pitch = cap.getUAPitch();
                 yaw = cap.getUAYaw();
@@ -106,6 +135,10 @@ public class AmplifiedPortalBlock extends Block {
 
             ServerLevel destinationWorld = server.getLevel(destinationKey);
             if (destinationWorld == null) {
+                // Prefer failing over sending the player to the wrong dimension.
+                if (uadAsOverworld && destinationKey.equals(OverworldIntegration.ORIGINAL_OVERWORLD_KEY)) {
+                    return InteractionResult.FAIL;
+                }
                 destinationKey = Level.OVERWORLD;
                 destinationWorld = server.getLevel(destinationKey);
             }
@@ -113,7 +146,9 @@ public class AmplifiedPortalBlock extends Block {
                 return InteractionResult.FAIL;
             }
 
-            if (destinationKey.equals(UADDimension.UAD_WORLD_KEY)
+            if ((destinationKey.equals(UADDimension.UAD_WORLD_KEY)
+                    || destinationKey.equals(OverworldIntegration.ORIGINAL_OVERWORLD_KEY)
+                    || (destinationKey.equals(Level.OVERWORLD) && uadAsOverworld))
                     && !AmplifiedPortalCreation.checkForGeneratedPortal(destinationWorld)) {
                 AmplifiedPortalCreation.generatePortal(destinationWorld);
             }

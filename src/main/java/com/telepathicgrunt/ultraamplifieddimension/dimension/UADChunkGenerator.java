@@ -235,12 +235,19 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                                 double yd = (double) ySection / (double) UADTerrainSampler.CELL_HEIGHT;
                                 double noiseValue = UADTerrainSampler.densityFromCorners(
                                         c00, c01, c10, c11, c00u, c01u, c10u, c11u, xd, yd, zd);
-                                noiseValue = terraformer.apply(noiseValue, x, y, z);
+                                UADStructureTerraformer.ApplyResult terraform = terraformer.apply(noiseValue, x, y, z);
+                                noiseValue = terraform.density();
 
-                                BlockState state = UADTerrainBlocks.terrainBlock(
-                                        noiseValue, biome, x, y, z, this.seaLevel, genSettings,
-                                        pos -> getNoiseBiome(randomState, pos.getX(), pos.getZ())
-                                );
+                                BlockState state;
+                                if (terraform.forceAir()) {
+                                    // BEARD_BOX cavities must stay dry below sea level (otherwise terrainBlock fills water).
+                                    state = Blocks.AIR.defaultBlockState();
+                                } else {
+                                    state = UADTerrainBlocks.terrainBlock(
+                                            noiseValue, biome, x, y, z, this.seaLevel, genSettings,
+                                            pos -> getNoiseBiome(randomState, pos.getX(), pos.getZ())
+                                    );
+                                }
 
                                 if (!state.isAir()) {
                                     section.setBlockState(xInChunk, y & 15, zInChunk, state, false);

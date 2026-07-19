@@ -105,5 +105,7 @@
   "text.autoconfig.ultra_amplified_dimension.option.allowNetherPortal": "允许下界传送门",
   "text.autoconfig.ultra_amplified_dimension.option.allowNetherPortal.@PrefixText": "\n\n让下界传送门能在超级放大维度中创建。在这个维度使用下界传送门会把你带到下界，但是在下界的下界传送门会把你带到主世界。因此，如果你想有第二条离开超级放大维度的途径，那么这个选项适合你。",
   "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld": "强制退出到主世界",
-  "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld.@PrefixText": "\n\n使得通过放大传送门方块离开超级放大维度时，无论你来自哪一个维度，都会将你送回主世界。如果这个维度被另一个维度锁定，因此你被困在这两个维度之间进行传送，而无法返回主世界，那么就使用这个选项。"
+  "text.autoconfig.ultra_amplified_dimension.option.forceExitToOverworld.@PrefixText": "\n\n使得通过放大传送门方块离开超级放大维度时，无论你来自哪一个维度，都会将你送回主世界。如果这个维度被另一个维度锁定，因此你被困在这两个维度之间进行传送，而无法返回主世界，那么就使用这个选项。",
+  "generator.ultra_amplified_dimension.ultra_amplified": "超级放大",
+  "dimension.ultra_amplified_dimension.original_overworld": "原版主世界"
 }

@@ -7,6 +7,8 @@
   "mixins": [
     "blocks.BaseFireBlockMixin",
     "dimension.WorldOptionsMixin",
+    "dimension.WorldPresetsMixin",
+    "dimension.DedicatedServerWorldDimensionDataMixin",
     "features.CocoaDecoratorMixin",
     "features.BeehiveDecoratorMixin",
     "structures.DesertPyramidPieceMixin",
@@ -26,7 +28,9 @@
     "structures.SwampHutPieceMixin",
     "structures.WoodlandMansionStructureStartMixin"
   ],
-  "client": [],
+  "client": [
+    "dimension.WorldCreationContextMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

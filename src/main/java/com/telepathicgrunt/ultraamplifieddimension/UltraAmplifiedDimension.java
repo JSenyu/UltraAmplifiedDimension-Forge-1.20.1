@@ -4,6 +4,8 @@ import com.telepathicgrunt.ultraamplifieddimension.capabilities.CapabilityPlayer
 import com.telepathicgrunt.ultraamplifieddimension.client.UltraAmplifiedDimensionClient;
 import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.AmplifiedPortalCreation;
+import com.telepathicgrunt.ultraamplifieddimension.dimension.OverworldIntegration;
+import com.telepathicgrunt.ultraamplifieddimension.dimension.UADChunkGenerator;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.UADDimension;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADBlocks;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADCarvers;
@@ -17,13 +19,18 @@ import com.telepathicgrunt.ultraamplifieddimension.world.carver.CaveCavityCarver
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,6 +60,7 @@ public class UltraAmplifiedDimension {
         forgeBus.addListener(UADDimension::levelTick);
         forgeBus.addListener(AmplifiedPortalCreation::portalCreationRightClick);
         forgeBus.addListener(this::onServerAboutToStart);
+        forgeBus.addListener(this::onServerStarted);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             UltraAmplifiedDimensionClient.subscribeClientEvents(modEventBus);
@@ -69,4 +77,27 @@ public class UltraAmplifiedDimension {
         long seed = event.getServer().getWorldData().worldGenOptions().seed();
         CaveCavityCarver.setSeed(BiomeManager.obfuscateSeed(seed));
     }
+
+    private void onServerStarted(ServerStartedEvent event) {
+        MinecraftServer server = event.getServer();
+        ServerLevel overworld = server.getLevel(Level.OVERWORLD);
+        ChunkGenerator overworldGen = overworld != null ? overworld.getChunkSource().getGenerator() : null;
+        boolean uadOverworld = overworldGen instanceof UADChunkGenerator;
+        boolean uadDimLoaded = server.getLevel(UADDimension.UAD_WORLD_KEY) != null;
+        boolean originalOwLoaded = server.getLevel(OverworldIntegration.ORIGINAL_OVERWORLD_KEY) != null;
+
+        LOGGER.info(
+                "UAD server status: biomeSize={}, enableUadDimension={}, setUadAsDefaultDimension={}, overrideVanillaOverworld={}, portalsEnabled={}, overworldGenerator={}, uadOverworld={}, uadDimensionLoaded={}, originalOverworldLoaded={}",
+                UADimensionConfig.biomeSize.get(),
+                UADimensionConfig.enableUadDimension.get(),
+                UADimensionConfig.setUadAsDefaultDimension.get(),
+                UADimensionConfig.overrideVanillaOverworld.get(),
+                OverworldIntegration.portalsEnabled(),
+                overworldGen != null ? overworldGen.getClass().getSimpleName() : "null",
+                uadOverworld,
+                uadDimLoaded,
+                originalOwLoaded
+        );
+    }
 }
+

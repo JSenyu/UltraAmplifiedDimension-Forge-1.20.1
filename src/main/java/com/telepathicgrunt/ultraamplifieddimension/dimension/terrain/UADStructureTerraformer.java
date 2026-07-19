@@ -15,10 +15,15 @@ import net.minecraft.world.level.levelgen.structure.pools.JigsawJunction;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.OceanMonumentStructure;
 
-/** Applies structure terrain-adjustment kernels to density samples. */
+/**
+ * Applies structure terrain-adjustment kernels to density samples.
+ * BEARD_BOX (ancient cities) hard-carves the piece volume and marks forceAir so
+ * cavities below sea level stay dry instead of filling with water.
+ */
 public final class UADStructureTerraformer {
     private static final int RADIUS = 12;
     private static final int KERNEL_SIZE = 24;
+    private static final double BEARD_BOX_INTERIOR_DENSITY = -2.0D;
 
     private static final float[] TERRAFORM_KERNEL = Util.make(new float[KERNEL_SIZE * KERNEL_SIZE * KERNEL_SIZE], (floats) -> {
         for (int x = 0; x < KERNEL_SIZE; ++x) {
@@ -40,6 +45,9 @@ public final class UADStructureTerraformer {
         }
     });
 
+    public record ApplyResult(double density, boolean forceAir) {
+    }
+
     private final ObjectList<Piece> pieces;
     private final ObjectList<JigsawJunction> junctions;
 
@@ -54,11 +62,11 @@ public final class UADStructureTerraformer {
         ObjectList<Piece> pieces = new ObjectArrayList<>(10);
         ObjectList<JigsawJunction> junctions = new ObjectArrayList<>(32);
 
-        // Same selection as Beardifier, plus always include ocean monument (old UAD added MONUMENT).
         structureManager.startsForStructure(chunkPos, structure ->
                 structure.terrainAdaptation() != TerrainAdjustment.NONE
                         || structure instanceof OceanMonumentStructure
         ).forEach(start -> {
+            TerrainAdjustment adjustment = start.getStructure().terrainAdaptation();
             boolean giantStructure = start.getStructure() instanceof OceanMonumentStructure;
             for (StructurePiece structurePiece : start.getPieces()) {
                 if (!structurePiece.isCloseToChunk(chunkPos, RADIUS)) {
@@ -66,7 +74,12 @@ public final class UADStructureTerraformer {
                 }
                 if (structurePiece instanceof PoolElementStructurePiece poolPiece) {
                     if (poolPiece.getElement().getProjection() == StructureTemplatePool.Projection.RIGID) {
-                        pieces.add(new Piece(poolPiece.getBoundingBox(), poolPiece.getGroundLevelDelta(), false));
+                        pieces.add(new Piece(
+                                poolPiece.getBoundingBox(),
+                                poolPiece.getGroundLevelDelta(),
+                                giantStructure ? TerrainAdjustment.NONE : adjustment,
+                                giantStructure
+                        ));
                     }
                     for (JigsawJunction junction : poolPiece.getJunctions()) {
                         int sx = junction.getSourceX();
@@ -76,7 +89,12 @@ public final class UADStructureTerraformer {
                         }
                     }
                 } else {
-                    pieces.add(new Piece(structurePiece.getBoundingBox(), 0, giantStructure));
+                    pieces.add(new Piece(
+                            structurePiece.getBoundingBox(),
+                            0,
+                            giantStructure ? TerrainAdjustment.NONE : adjustment,
+                            giantStructure
+                    ));
                 }
             }
         });
@@ -84,32 +102,58 @@ public final class UADStructureTerraformer {
         return new UADStructureTerraformer(pieces, junctions);
     }
 
-    public double apply(double noiseValue, int x, int y, int z) {
+    public ApplyResult apply(double noiseValue, int x, int y, int z) {
+        boolean forceAir = false;
         ObjectListIterator<Piece> pieceIt = pieces.iterator();
         while (pieceIt.hasNext()) {
             Piece piece = pieceIt.next();
             BoundingBox box = piece.box;
             int pieceX = Math.max(0, Math.max(box.minX() - x, x - box.maxX()));
-            int pieceY = y - (box.minY() + piece.groundLevelDelta);
             int pieceZ = Math.max(0, Math.max(box.minZ() - z, z - box.maxZ()));
+            int groundY = box.minY() + piece.groundLevelDelta;
+            int relativeY = y - groundY;
+
             if (piece.giant) {
-                pieceY -= 2;
-                noiseValue += giantTerraformNoise(pieceX, pieceY, pieceZ) * 0.8D;
-            } else {
-                noiseValue += terraformNoise(pieceX, pieceY, pieceZ) * 0.8D;
+                noiseValue += giantTerraformNoise(pieceX, relativeY - 2, pieceZ) * 0.8D;
+                continue;
+            }
+
+            switch (piece.adjustment) {
+                case NONE -> {
+                }
+                case BURY -> noiseValue += getBuryContribution(pieceX, relativeY, pieceZ);
+                case BEARD_THIN -> noiseValue += terraformNoise(pieceX, relativeY, pieceZ) * 0.8D;
+                case BEARD_BOX -> {
+                    // Vanilla BEARD_BOX: vertical distance is outside [groundY, maxY].
+                    int boxY = Math.max(0, Math.max(groundY - y, y - box.maxY()));
+                    if (pieceX == 0 && pieceZ == 0 && boxY == 0) {
+                        noiseValue = Math.min(noiseValue, BEARD_BOX_INTERIOR_DENSITY);
+                        forceAir = true;
+                    } else {
+                        noiseValue += terraformNoise(pieceX, boxY, pieceZ) * 0.8D;
+                        if (pieceX <= 8 && pieceZ <= 8 && boxY <= 8) {
+                            noiseValue = Math.min(noiseValue, -1.0D);
+                            forceAir = true;
+                        }
+                    }
+                }
             }
         }
 
         ObjectListIterator<JigsawJunction> junctionIt = junctions.iterator();
         while (junctionIt.hasNext()) {
             JigsawJunction junction = junctionIt.next();
-            // Preserve old UAD quirk: pieceX used z - sourceX
-            int pieceX = z - junction.getSourceX();
+            int pieceX = x - junction.getSourceX();
             int pieceY = y - junction.getSourceGroundY();
             int pieceZ = z - junction.getSourceZ();
             noiseValue += terraformNoise(pieceX, pieceY, pieceZ) * 0.4D;
         }
-        return noiseValue;
+        return new ApplyResult(noiseValue, forceAir);
+    }
+
+    private static double getBuryContribution(int x, int y, int z) {
+        double length = Mth.length((double) x, (double) y / 2.0D, (double) z);
+        return Mth.clampedMap(length, 0.0D, 6.0D, 1.0D, 0.0D);
     }
 
     private static double terraformNoise(int x, int y, int z) {
@@ -146,6 +190,6 @@ public final class UADStructureTerraformer {
         return -((Mth.fastInvSqrt(horizontalDist) * 1.1D) - 1D + v);
     }
 
-    private record Piece(BoundingBox box, int groundLevelDelta, boolean giant) {
+    private record Piece(BoundingBox box, int groundLevelDelta, TerrainAdjustment adjustment, boolean giant) {
     }
 }

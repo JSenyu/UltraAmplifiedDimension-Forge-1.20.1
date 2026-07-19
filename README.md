@@ -1,5 +1,7 @@
 # Ultra Amplified Dimension (Forge 1.20.1)
 
+**English** | [中文](README_zh.md)
+
 A dimension more extreme than Amplified: layered floating landscapes, boosted biomes (including Nether/End regions), custom structures, and dense worldgen.
 
 This repository is a **community port** of TelepathicGrunt's Ultra Amplified Dimension to **Minecraft 1.20.1 / Forge**.
@@ -30,10 +32,42 @@ Right-click the center with Flint and Steel (or another item in `#ultra_amplifie
 
 Portal frame / activation items can be changed with datapack tags.
 
+## World type
+
+Create World → World Type includes **Ultra Amplified** (listed first).  
+Dedicated server: `level-type=ultra_amplified_dimension:ultra_amplified`
+
 ## Configuration
 
-- Mod config: `ultra_amplified_dimension.toml` (fog, nether portals, cloud height, force exit to Overworld, etc.)
-- Most worldgen is datapack-driven under `data/ultra_amplified_dimension/`
+File: `config/ultra_amplified_dimension.toml`  
+Most worldgen remains datapack-driven under `data/ultra_amplified_dimension/`.
+
+### General Dimension Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `heavyFog` | `false` | Heavy fog (not distance fog). |
+| `cloudHeight` | `245` | Cloud height. |
+| `netherLighting` | `false` | Nether-style lighting. |
+| `skyType` | `NORMAL` | `NORMAL`, `END`, or `NONE`. |
+| `allowNetherPortal` | `false` | Allow Nether portals inside UAD. |
+| `forceExitToOverworld` | `false` | Amplified portal always exits to Overworld. |
+
+### Biome Size
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `biomeSize` | `20` | Biome scale `1–20` (default matches 1.16.5-scale). New chunks only. |
+| `subBiomeRate` | `0.44` | Sub-biome chance. |
+| `mutatedBiomeRate` | `0.42` | Mutated biome chance. |
+
+### World Integration
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enableUadDimension` | `true` | Extra UAD dimension. `false` disables portal travel to it. |
+| `setUadAsDefaultDimension` | `false` | Default world type uses UAD as Overworld; vanilla kept as `original_overworld`; portals remain. Ignored if override is on. |
+| `overrideVanillaOverworld` | `false` | Replace Overworld generation with UAD; disables amplified portals. Overrides the option above. |
 
 ## Building
 
@@ -48,8 +82,6 @@ Output jar:
 ```text
 build/libs/ultra_amplified_dimension-<version>.jar
 ```
-
-For IDE runs, mixin remapping properties are already set in `build.gradle`.
 
 ## Credits
 

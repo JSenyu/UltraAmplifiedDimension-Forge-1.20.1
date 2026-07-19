@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "ultra_amplified_dimension:taiga",
+    "ultra_amplified_dimension:taiga_relic",
+    "ultra_amplified_dimension:taiga_rocky",
+    "ultra_amplified_dimension:snowy_taiga",
+    "ultra_amplified_dimension:snowy_taiga_relic",
+    "ultra_amplified_dimension:snowy_taiga_rocky",
+    "ultra_amplified_dimension:giant_tree_taiga",
+    "ultra_amplified_dimension:giant_tree_taiga_relic",
+    "ultra_amplified_dimension:giant_spruce_taiga_pillars",
+    "ultra_amplified_dimension:giant_spruce_taiga_pillars_relic",
+    "ultra_amplified_dimension:jungle",
+    "ultra_amplified_dimension:jungle_edge",
+    "ultra_amplified_dimension:jungle_relic",
+    "ultra_amplified_dimension:flower_jungle",
+    "ultra_amplified_dimension:flower_jungle_edge",
+    "ultra_amplified_dimension:bamboo_jungle_relic",
+    "ultra_amplified_dimension:tall_birch_forest",
+    "ultra_amplified_dimension:tall_birch_forest_relic"
+  ]
+}
