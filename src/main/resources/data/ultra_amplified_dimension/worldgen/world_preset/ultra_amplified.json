@@ -7,7 +7,7 @@
         "biome_source": {
           "type": "ultra_amplified_dimension:biome_source",
           "seed": 0,
-          "biome_size": 20,
+          "biome_size": 89,
           "sub_biome_rate": 0.44,
           "mutated_biome_rate": 0.42,
           "regions": {

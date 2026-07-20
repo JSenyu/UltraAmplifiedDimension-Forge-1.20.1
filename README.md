@@ -57,9 +57,18 @@ Most worldgen remains datapack-driven under `data/ultra_amplified_dimension/`.
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `biomeSize` | `20` | Biome scale `1–20` (default matches 1.16.5-scale). New chunks only. |
+| `biomeSize` | `89` | Biome scale `1–357`. New chunks only. |
 | `subBiomeRate` | `0.44` | Sub-biome chance. |
 | `mutatedBiomeRate` | `0.42` | Mutated biome chance. |
+
+**Block conversion** (noise feature scale, not a hard square edge):
+
+| Meaning | Formula | Default `89` | Max `357` |
+|---------|---------|--------------|-----------|
+| Typical biome span | `biomeSize × 5.6` blocks | ≈ **500** | ≈ **2000** |
+| Climate region span | `biomeSize × 16.8` blocks | ≈ 1500 | ≈ 6000 |
+
+Sampling uses quarter coords (1 quart = 4 blocks): `regionScale = 4.2 × biomeSize`, `biomeScale = regionScale / 3`.
 
 ### World Integration
 

@@ -64,9 +64,9 @@ public class UADimensionConfig {
 		builder.comment("biome scale").push("Biome Size");
 
 		biomeSize = builder
-				.comment("biome size 1-20 (default 20; closer to 1.16.5). new chunks only")
+				.comment("biome size 1-357 (default 89 ≈ 500 blocks; max 357 ≈ 2000 blocks). scale ≈ size×5.6 blocks. new chunks only")
 				.translation("ultraamplified.config.biome.biomesize")
-				.defineInRange("biomeSize", 20, 1, 20);
+				.defineInRange("biomeSize", 89, 1, 357);
 
 		subBiomeRate = builder
 				.comment("sub-biome chance (default 0.44)")

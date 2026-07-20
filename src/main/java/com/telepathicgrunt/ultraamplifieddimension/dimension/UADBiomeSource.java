@@ -20,7 +20,7 @@ public class UADBiomeSource extends BiomeSource {
     public static final Codec<UADBiomeSource> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.LONG.optionalFieldOf("seed", 0L).forGetter(source -> source.configuredSeed),
-                    Codec.intRange(1, 20).fieldOf("biome_size").forGetter(source -> source.biomeSize),
+                    Codec.intRange(1, 357).fieldOf("biome_size").forGetter(source -> source.biomeSize),
                     Codec.floatRange(0, 1).fieldOf("sub_biome_rate").forGetter(source -> source.subBiomeRate),
                     Codec.floatRange(0, 1).fieldOf("mutated_biome_rate").forGetter(source -> source.mutatedBiomeRate),
                     RegionManager.CODEC.fieldOf("regions").forGetter(source -> source.regionManager)
