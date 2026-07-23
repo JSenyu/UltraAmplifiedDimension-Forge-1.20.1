@@ -40,7 +40,7 @@ public final class OceanStructurePiecesUtils {
         int startHeight = Math.min(random.nextInt(random.nextInt(Math.max(highestHeight - bottomOfSea, 1)) + 1) + bottomOfSea + 5, UADStructureHeights.MAX_TERRAIN);
 
         for (mutable.move(Direction.UP, startHeight);
-             mutable.getY() > Math.max(bottomOfSea - 20, UADStructureHeights.MIN_SOLID);
+             mutable.getY() > Math.max(bottomOfSea - 20, UADStructureHeights.minSolid());
              mutable.move(Direction.DOWN)) {
             currentState = level.getBlockState(mutable);
             if (isSolidUnderwaterGround(level, mutable, currentState) && pastState.getFluidState().is(FluidTags.WATER)) {

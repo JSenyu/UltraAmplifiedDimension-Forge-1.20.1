@@ -87,8 +87,9 @@ public class UltraAmplifiedDimension {
         boolean originalOwLoaded = server.getLevel(OverworldIntegration.ORIGINAL_OVERWORLD_KEY) != null;
 
         LOGGER.info(
-                "UAD server status: biomeSize={}, enableUadDimension={}, setUadAsDefaultDimension={}, overrideVanillaOverworld={}, portalsEnabled={}, overworldGenerator={}, uadOverworld={}, uadDimensionLoaded={}, originalOverworldLoaded={}",
+                "UAD server status: biomeSize={}, generateBelowZero={}, enableUadDimension={}, setUadAsDefaultDimension={}, overrideVanillaOverworld={}, portalsEnabled={}, overworldGenerator={}, uadOverworld={}, uadDimensionLoaded={}, originalOverworldLoaded={}",
                 UADimensionConfig.biomeSize.get(),
+                UADimensionConfig.generateBelowZero.get(),
                 UADimensionConfig.enableUadDimension.get(),
                 UADimensionConfig.setUadAsDefaultDimension.get(),
                 UADimensionConfig.overrideVanillaOverworld.get(),

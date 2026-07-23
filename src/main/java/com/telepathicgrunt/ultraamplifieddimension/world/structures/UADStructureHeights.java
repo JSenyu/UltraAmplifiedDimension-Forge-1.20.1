@@ -4,10 +4,10 @@ import com.telepathicgrunt.ultraamplifieddimension.dimension.terrain.UADTerrainS
 import net.minecraft.util.Mth;
 
 /**
- * Vertical bounds for vanilla/custom structures inside UAD terrain (Y 0..243, bedrock ~0-5).
+ * Vertical bounds for vanilla/custom structures inside UAD terrain.
+ * Default floor is Y=0; with generateBelowZero the floor is Y=-64.
  */
 public final class UADStructureHeights {
-    public static final int MIN_SOLID = 5;
     public static final int MAX_TERRAIN = UADTerrainSampler.MAX_TERRAIN_Y;
     public static final int MAX_MANSION = 180;
     public static final int UNDERGROUND_MIN = 16;
@@ -19,11 +19,15 @@ public final class UADStructureHeights {
     private UADStructureHeights() {
     }
 
+    public static int minSolid() {
+        return UADTerrainSampler.minY() + 5;
+    }
+
     public static int clampTerrainY(int y) {
-        return Mth.clamp(y, MIN_SOLID, MAX_TERRAIN);
+        return Mth.clamp(y, minSolid(), MAX_TERRAIN);
     }
 
     public static int clampMansionY(int y) {
-        return Mth.clamp(y, MIN_SOLID, MAX_MANSION);
+        return Mth.clamp(y, minSolid(), MAX_MANSION);
     }
 }

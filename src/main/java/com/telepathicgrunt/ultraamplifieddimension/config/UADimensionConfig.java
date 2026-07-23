@@ -19,6 +19,7 @@ public class UADimensionConfig {
 	public static ForgeConfigSpec.BooleanValue enableUadDimension;
 	public static ForgeConfigSpec.BooleanValue setUadAsDefaultDimension;
 	public static ForgeConfigSpec.BooleanValue overrideVanillaOverworld;
+	public static ForgeConfigSpec.BooleanValue generateBelowZero;
 
 	static {
 		ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
@@ -88,14 +89,19 @@ public class UADimensionConfig {
 				.define("enableUadDimension", true);
 
 		setUadAsDefaultDimension = builder
-				.comment("default world type uses UAD overworld; vanilla kept as original_overworld; portals stay. ignored if overrideVanillaOverworld")
+				.comment("default world type uses UAD overworld; vanilla kept as original_overworld; portals stay. ignored if overrideVanillaOverworld. new worlds only; restart game after changing")
 				.translation("ultraamplified.config.world.setuadasdefaultdimension")
 				.define("setUadAsDefaultDimension", false);
 
 		overrideVanillaOverworld = builder
-				.comment("replace overworld generation with UAD; disables amplified portals. overrides setUadAsDefaultDimension")
+				.comment("replace overworld generation with UAD; disables amplified portals. overrides setUadAsDefaultDimension. new worlds only; restart game after changing")
 				.translation("ultraamplified.config.world.overridevanillaoverworld")
 				.define("overrideVanillaOverworld", false);
+
+		generateBelowZero = builder
+				.comment("if true, UAD terrain also generates Y=-64..0 (default false keeps floor at Y=0). new chunks only")
+				.translation("ultraamplified.config.world.generatebelowzero")
+				.define("generateBelowZero", false);
 
 		builder.pop();
 	}

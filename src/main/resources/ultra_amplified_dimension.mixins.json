@@ -29,7 +29,8 @@
     "structures.WoodlandMansionStructureStartMixin"
   ],
   "client": [
-    "dimension.WorldCreationContextMixin"
+    "dimension.WorldCreationContextMixin",
+    "dimension.CreateWorldScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

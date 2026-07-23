@@ -73,11 +73,24 @@
 
 ### 世界集成（World Integration）
 
+改配置后请**完全退出游戏再进**，且仅对**新世界**生效。
+
 | 选项 | 默认 | 说明 |
 |------|------|------|
 | `enableUadDimension` | `true` | 是否启用额外 UAD 维度。`false` 时无法通过传送门前往该维度。 |
-| `setUadAsDefaultDimension` | `false` | 「默认」世界类型的主世界改为 UAD；原版主世界保留为 `original_overworld`，传送门可往返。若开启覆盖主世界则忽略本项。 |
-| `overrideVanillaOverworld` | `false` | 直接用 UAD 地形替换主世界生成（结构仍会按 UAD 群系生成）；禁用放大传送门。优先级高于上一选项。 |
+| `setUadAsDefaultDimension` | `false` | 「默认」世界类型的**主世界**换成 UAD；原版主世界保留为 `original_overworld`，放大传送门可往返。若开启下一选项则忽略本项。 |
+| `overrideVanillaOverworld` | `false` | 主世界直接变成 UAD（整档只要 UAD）；**禁用**放大传送门。优先级高于上一选项。 |
+| `generateBelowZero` | `false` | `false`：UAD 地形地板在 Y=0，以下为空；`true`：地形延伸到 Y=-64..0（与上方放大地形同一套噪声）。仅对新区块生效。 |
+
+**怎么选：**
+
+| 需求 | 做法 |
+|------|------|
+| 出生即 UAD，但仍想用传送门回原版主世界 | 开 `setUadAsDefaultDimension`，用「默认」世界类型新建 |
+| 整档只要 UAD，不要传送门往返 | 开 `overrideVanillaOverworld`，用「默认」世界类型新建 |
+| 不改配置，单次选用 UAD | 创建世界时手选世界类型「Ultra Amplified」 |
+
+手选 UAD 世界类型不依赖上述两个开关；它们只影响「默认」世界类型的主世界生成器。
 
 ## 构建
 

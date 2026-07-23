@@ -3,7 +3,6 @@ package com.telepathicgrunt.ultraamplifieddimension.mixin.dimension;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.OverworldIntegration;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.world.level.levelgen.WorldDimensions;
-import net.minecraft.world.level.levelgen.WorldOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,10 +15,9 @@ public class WorldCreationContextMixin {
     @Unique
     private static final ThreadLocal<Boolean> ULTRAAMPLIFIEDDIMENSION$APPLYING = ThreadLocal.withInitial(() -> false);
 
-    @Inject(method = "withSettings", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "withDimensions", at = @At("RETURN"), cancellable = true)
     private void ultraamplifieddimension$applyOverworldReplacement(
-            WorldOptions options,
-            WorldDimensions dimensions,
+            WorldCreationContext.DimensionsUpdater updater,
             CallbackInfoReturnable<WorldCreationContext> cir
     ) {
         if (ULTRAAMPLIFIEDDIMENSION$APPLYING.get()) {

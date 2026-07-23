@@ -99,12 +99,12 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     /**
-     * Structure placement uses generator minY; keep it at terrain floor so pieces are not pushed into the void.
-     * The dimension itself still has min_y=-64 for empty space below bedrock.
+     * Structure placement uses generator minY; default floor is Y=0 so pieces are not pushed into the void.
+     * When generateBelowZero is enabled, floor is Y=-64 to match dimension height.
      */
     @Override
     public int getMinY() {
-        return UADTerrainSampler.MIN_Y;
+        return UADTerrainSampler.minY();
     }
 
     private UADTerrainSampler sampler(RandomState randomState) {
@@ -169,17 +169,19 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
         int blockMinZ = chunk.getPos().getMinBlockZ();
         int worldMaxY = chunk.getMaxBuildHeight();
         int worldMinY = chunk.getMinBuildHeight();
+        int terrainMinY = UADTerrainSampler.minY();
+        int noiseSizeY = UADTerrainSampler.noiseSizeY();
         biomeCache.get().clear();
 
-        double[][][] columns = new double[2][UADTerrainSampler.NOISE_SIZE_XZ + 1][UADTerrainSampler.NOISE_SIZE_Y + 1];
+        double[][][] columns = new double[2][UADTerrainSampler.NOISE_SIZE_XZ + 1][noiseSizeY + 1];
         for (int zNoise = 0; zNoise < UADTerrainSampler.NOISE_SIZE_XZ + 1; ++zNoise) {
-            columns[0][zNoise] = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
+            columns[0][zNoise] = new double[noiseSizeY + 1];
             terrainSampler.fillNoiseColumn(
                     columns[0][zNoise],
                     chunkX * UADTerrainSampler.NOISE_SIZE_XZ,
                     chunkZ * UADTerrainSampler.NOISE_SIZE_XZ + zNoise
             );
-            columns[1][zNoise] = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
+            columns[1][zNoise] = new double[noiseSizeY + 1];
         }
 
         Heightmap oceanFloor = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
@@ -199,7 +201,7 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                 int sectionIndex = chunk.getSectionsCount() - 1;
                 LevelChunkSection section = chunk.getSection(sectionIndex);
 
-                for (int yNoise = UADTerrainSampler.NOISE_SIZE_Y - 1; yNoise >= 0; --yNoise) {
+                for (int yNoise = noiseSizeY - 1; yNoise >= 0; --yNoise) {
                     double c00 = columns[0][zNoise][yNoise];
                     double c01 = columns[0][zNoise + 1][yNoise];
                     double c10 = columns[1][zNoise][yNoise];
@@ -221,7 +223,7 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                             Holder<Biome> biome = getNoiseBiome(randomState, x, z);
 
                             for (int ySection = UADTerrainSampler.CELL_HEIGHT - 1; ySection >= 0; --ySection) {
-                                int y = yNoise * UADTerrainSampler.CELL_HEIGHT + ySection;
+                                int y = terrainMinY + yNoise * UADTerrainSampler.CELL_HEIGHT + ySection;
                                 if (y < worldMinY || y >= worldMaxY) {
                                     continue;
                                 }
@@ -319,24 +321,26 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
         double xd = (double) localX / (double) UADTerrainSampler.CELL_WIDTH;
         double zd = (double) localZ / (double) UADTerrainSampler.CELL_WIDTH;
 
-        double[] c00 = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
-        double[] c01 = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
-        double[] c10 = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
-        double[] c11 = new double[UADTerrainSampler.NOISE_SIZE_Y + 1];
+        double[] c00 = new double[UADTerrainSampler.noiseSizeY() + 1];
+        double[] c01 = new double[UADTerrainSampler.noiseSizeY() + 1];
+        double[] c10 = new double[UADTerrainSampler.noiseSizeY() + 1];
+        double[] c11 = new double[UADTerrainSampler.noiseSizeY() + 1];
         terrainSampler.fillNoiseColumn(c00, noiseX, noiseZ);
         terrainSampler.fillNoiseColumn(c01, noiseX, noiseZ + 1);
         terrainSampler.fillNoiseColumn(c10, noiseX + 1, noiseZ);
         terrainSampler.fillNoiseColumn(c11, noiseX + 1, noiseZ + 1);
 
         Holder<Biome> biome = getNoiseBiome(randomState, x, z);
+        int terrainMinY = UADTerrainSampler.minY();
 
         for (int y = minY + height - 1; y >= minY; --y) {
             BlockState state;
-            if (y < UADTerrainSampler.MIN_Y || y > UADTerrainSampler.MAX_TERRAIN_Y) {
+            if (y < terrainMinY || y > UADTerrainSampler.MAX_TERRAIN_Y) {
                 state = Blocks.AIR.defaultBlockState();
             } else {
-                int yNoise = y / UADTerrainSampler.CELL_HEIGHT;
-                int ySection = y % UADTerrainSampler.CELL_HEIGHT;
+                int relativeY = y - terrainMinY;
+                int yNoise = relativeY / UADTerrainSampler.CELL_HEIGHT;
+                int ySection = relativeY % UADTerrainSampler.CELL_HEIGHT;
                 double yd = (double) ySection / (double) UADTerrainSampler.CELL_HEIGHT;
                 double noiseValue = UADTerrainSampler.densityFromCorners(
                         c00[yNoise], c01[yNoise], c10[yNoise], c11[yNoise],

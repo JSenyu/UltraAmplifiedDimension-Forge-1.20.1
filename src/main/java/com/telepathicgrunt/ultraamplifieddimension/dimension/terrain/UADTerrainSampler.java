@@ -1,5 +1,6 @@
 package com.telepathicgrunt.ultraamplifieddimension.dimension.terrain;
 
+import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
@@ -14,9 +15,13 @@ import java.util.stream.IntStream;
 public final class UADTerrainSampler {
     public static final int CELL_WIDTH = 2;
     public static final int CELL_HEIGHT = 4;
+    /** Noise cells when terrain starts at Y=0 (covers Y 0..243). */
     public static final int NOISE_SIZE_Y = 61;
+    /** Noise cells when generateBelowZero extends terrain to Y=-64 (covers Y -64..243). */
+    public static final int NOISE_SIZE_Y_BELOW_ZERO = 77;
     public static final int NOISE_SIZE_XZ = 16 / CELL_WIDTH;
     public static final int MIN_Y = 0;
+    public static final int MIN_Y_BELOW_ZERO = -64;
     public static final int MAX_TERRAIN_Y = NOISE_SIZE_Y * CELL_HEIGHT - 1; // 243
 
     private static final double XZ_SCALE = 2.0D;
@@ -57,6 +62,24 @@ public final class UADTerrainSampler {
         this.depthNoise = PerlinNoise.createLegacyForBlendedNoise(random, IntStream.rangeClosed(-15, 0));
     }
 
+    public static boolean generateBelowZero() {
+        try {
+            return UADimensionConfig.generateBelowZero.get();
+        } catch (IllegalStateException | NullPointerException ignored) {
+            return false;
+        }
+    }
+
+    /** Terrain floor Y used by the sampler / chunk generator. */
+    public static int minY() {
+        return generateBelowZero() ? MIN_Y_BELOW_ZERO : MIN_Y;
+    }
+
+    /** Vertical noise cell count for the active minY setting. */
+    public static int noiseSizeY() {
+        return generateBelowZero() ? NOISE_SIZE_Y_BELOW_ZERO : NOISE_SIZE_Y;
+    }
+
     /** Trilinear lerp of eight noise-cell corners, then density shaping. */
     public static double densityFromCorners(
             double c00, double c01, double c10, double c11,
@@ -78,15 +101,16 @@ public final class UADTerrainSampler {
     }
 
     public void fillNoiseColumn(double[] noiseColumn, int noiseX, int noiseZ) {
+        int sizeY = noiseSizeY();
         double horizontalScale = 684.412D * XZ_SCALE;
         double verticalScale = 684.412D * Y_SCALE;
         double horizontalStretch = horizontalScale / XZ_FACTOR;
         double verticalStretch = verticalScale / Y_FACTOR;
         double randomDensity = randomDensityOffset(noiseX, noiseZ);
 
-        for (int noiseY = 0; noiseY <= NOISE_SIZE_Y; ++noiseY) {
+        for (int noiseY = 0; noiseY <= sizeY; ++noiseY) {
             double sample = sampleNoise(noiseX, noiseY, noiseZ, horizontalScale, verticalScale, horizontalStretch, verticalStretch);
-            double d8 = 1.0D - (double) noiseY * 2.0D / (double) NOISE_SIZE_Y + randomDensity;
+            double d8 = 1.0D - (double) noiseY * 2.0D / (double) sizeY + randomDensity;
             double d9 = d8 * DENSITY_FACTOR + DENSITY_OFFSET;
             double d10 = (d9 + DENSITY_BIAS) * DENSITY_SCALE;
             if (d10 > 0.0D) {
@@ -96,7 +120,7 @@ public final class UADTerrainSampler {
             }
 
             if (TOP_SLIDE_SIZE > 0.0D) {
-                double t = ((double) (NOISE_SIZE_Y - noiseY) - TOP_SLIDE_OFFSET) / TOP_SLIDE_SIZE;
+                double t = ((double) (sizeY - noiseY) - TOP_SLIDE_OFFSET) / TOP_SLIDE_SIZE;
                 sample = Mth.clampedLerp(TOP_SLIDE_TARGET, sample, t);
             }
             if (BOTTOM_SLIDE_SIZE > 0.0D) {
