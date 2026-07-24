@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.telepathicgrunt.ultraamplifieddimension.UltraAmplifiedDimension;
 import com.telepathicgrunt.ultraamplifieddimension.utils.GeneralUtils;
 import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.NbtDungeonConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.processors.ClearInvalidBlockEntityNbtProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -140,6 +141,7 @@ public class NbtDungeon extends Feature<NbtDungeonConfig> {
             processorRegistry.getHolder(ResourceKey.create(Registries.PROCESSOR_LIST, config.processor))
                     .or(() -> processorRegistry.getHolder(emptyProcessorKey))
                     .ifPresent(holder -> holder.value().list().forEach(placementSettings::addProcessor));
+            placementSettings.addProcessor(ClearInvalidBlockEntityNbtProcessor.INSTANCE);
 
             BlockPos placePos = mutable.set(position).move(-halfLengths.getX(), 0, -halfLengths.getZ());
             template.placeInWorld(world, placePos, placePos, placementSettings, random, 2);
@@ -148,6 +150,7 @@ public class NbtDungeon extends Feature<NbtDungeonConfig> {
             processorRegistry.getHolder(ResourceKey.create(Registries.PROCESSOR_LIST, config.postProcessor))
                     .or(() -> processorRegistry.getHolder(emptyProcessorKey))
                     .ifPresent(holder -> holder.value().list().forEach(placementSettings::addProcessor));
+            placementSettings.addProcessor(ClearInvalidBlockEntityNbtProcessor.INSTANCE);
 
             if (!placementSettings.getProcessors().isEmpty()) {
                 List<StructureTemplate.StructureBlockInfo> blockInfos = template.filterBlocks(placePos, placementSettings, Blocks.STRUCTURE_VOID);

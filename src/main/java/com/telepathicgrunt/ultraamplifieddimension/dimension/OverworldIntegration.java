@@ -1,10 +1,13 @@
 package com.telepathicgrunt.ultraamplifieddimension.dimension;
 
+import com.mojang.serialization.Lifecycle;
 import com.telepathicgrunt.ultraamplifieddimension.UltraAmplifiedDimension;
 import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.DebugLevelSource;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -19,6 +23,7 @@ import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
 public final class OverworldIntegration {
     public static final ResourceKey<WorldPreset> UAD_WORLD_PRESET = ResourceKey.create(
@@ -45,6 +50,21 @@ public final class OverworldIntegration {
 
     public static boolean shouldReplaceDefaultOverworld() {
         return UADimensionConfig.overrideVanillaOverworld.get() || UADimensionConfig.setUadAsDefaultDimension.get();
+    }
+
+    /**
+     * Keep the separate {@code ultra_amplified_dimension} LevelStem only in classic mode
+     * (portal destination while Overworld stays vanilla). When Overworld is already UAD,
+     * that extra dimension is redundant and should not appear in {@code /execute in}.
+     */
+    public static boolean shouldKeepSeparateUadDimension() {
+        if (UADimensionConfig.overrideVanillaOverworld.get()) {
+            return false;
+        }
+        if (UADimensionConfig.setUadAsDefaultDimension.get()) {
+            return false;
+        }
+        return UADimensionConfig.enableUadDimension.get();
     }
 
     public static boolean isUadChunkGenerator(ChunkGenerator generator) {
@@ -88,7 +108,7 @@ public final class OverworldIntegration {
             return null;
         }
         return holder.value().overworld()
-                .map(stem -> stem.generator())
+                .map(LevelStem::generator)
                 .orElse(null);
     }
 
@@ -107,5 +127,21 @@ public final class OverworldIntegration {
                 UADimensionConfig.setUadAsDefaultDimension.get()
         );
         return dimensions.replaceOverworldGenerator(access, generator);
+    }
+
+    /** Drop a LevelStem from a frozen registry (used when baking world dimensions). */
+    public static Registry<LevelStem> withoutLevelStem(Registry<LevelStem> registry, ResourceKey<LevelStem> remove) {
+        if (!registry.containsKey(remove)) {
+            return registry;
+        }
+        WritableRegistry<LevelStem> writable = new MappedRegistry<>(Registries.LEVEL_STEM, Lifecycle.experimental());
+        for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : registry.entrySet()) {
+            if (entry.getKey().equals(remove)) {
+                continue;
+            }
+            writable.register(entry.getKey(), entry.getValue(), registry.lifecycle(entry.getValue()));
+        }
+        UltraAmplifiedDimension.LOGGER.info("Omitting separate dimension {}", remove.location());
+        return writable.freeze();
     }
 }

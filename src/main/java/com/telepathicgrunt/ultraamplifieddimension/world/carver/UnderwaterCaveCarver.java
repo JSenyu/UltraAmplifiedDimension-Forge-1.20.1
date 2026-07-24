@@ -53,7 +53,7 @@ public class UnderwaterCaveCarver extends CaveWorldCarver {
         }
 
         BlockState blockstate = chunk.getBlockState(mutableBlockPos);
-        if (!CARVABLE_BLOCKS.contains(blockstate.getBlock())) {
+        if (!CARVABLE_BLOCKS.contains(blockstate.getBlock()) || blockstate.is(Blocks.BEDROCK)) {
             return false;
         }
 

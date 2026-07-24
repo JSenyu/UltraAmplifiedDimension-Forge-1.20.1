@@ -5,13 +5,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.telepathicgrunt.ultraamplifieddimension.config.UADimensionConfig;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.biomeprovider.BiomeGroup;
 import com.telepathicgrunt.ultraamplifieddimension.dimension.biomeprovider.RegionManager;
+import com.telepathicgrunt.ultraamplifieddimension.dimension.terrain.UADTerrainSampler;
 import com.telepathicgrunt.ultraamplifieddimension.utils.OpenSimplexNoise;
 import com.telepathicgrunt.ultraamplifieddimension.utils.WorldSeedHolder;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -23,7 +26,9 @@ public class UADBiomeSource extends BiomeSource {
                     Codec.intRange(1, 357).fieldOf("biome_size").forGetter(source -> source.biomeSize),
                     Codec.floatRange(0, 1).fieldOf("sub_biome_rate").forGetter(source -> source.subBiomeRate),
                     Codec.floatRange(0, 1).fieldOf("mutated_biome_rate").forGetter(source -> source.mutatedBiomeRate),
-                    RegionManager.CODEC.fieldOf("regions").forGetter(source -> source.regionManager)
+                    RegionManager.CODEC.fieldOf("regions").forGetter(source -> source.regionManager),
+                    Biome.CODEC.fieldOf("deep_dark_biome").forGetter(source -> source.deepDarkBiome),
+                    Biome.CODEC.fieldOf("lush_caves_biome").forGetter(source -> source.lushCavesBiome)
             ).apply(instance, instance.stable(UADBiomeSource::new))
     );
 
@@ -40,8 +45,17 @@ public class UADBiomeSource extends BiomeSource {
             OpenSimplexNoise biomePick,
             OpenSimplexNoise detail,
             OpenSimplexNoise mutation,
-            OpenSimplexNoise pocket
+            OpenSimplexNoise pocket,
+            OpenSimplexNoise deepDark,
+            OpenSimplexNoise lushCaves
     ) {}
+
+    // Deep dark pocket thresholds (noise 0..1). Higher = rarer / smaller.
+    private static final double DEEP_DARK_CORE = 0.74D;
+    private static final double DEEP_DARK_EDGE = 0.64D;
+    // Lush caves are more common than deep dark (vanilla humidity pockets).
+    private static final double LUSH_CAVES_CORE = 0.70D;
+    private static final double LUSH_CAVES_EDGE = 0.58D;
 
     // 0 = resolve to world seed on first sample (datapack may decode before WorldOptions).
     private final long configuredSeed;
@@ -49,18 +63,37 @@ public class UADBiomeSource extends BiomeSource {
     private final float subBiomeRate;
     private final float mutatedBiomeRate;
     private final RegionManager regionManager;
+    private final Holder<Biome> deepDarkBiome;
+    private final Holder<Biome> lushCavesBiome;
     private final List<Holder<Biome>> possibleBiomes;
     private final Object noiseLock = new Object();
     private volatile NoiseFields noise;
 
-    public UADBiomeSource(long seed, int biomeSize, float subBiomeRate, float mutatedBiomeRate, RegionManager regionManager) {
+    public UADBiomeSource(
+            long seed,
+            int biomeSize,
+            float subBiomeRate,
+            float mutatedBiomeRate,
+            RegionManager regionManager,
+            Holder<Biome> deepDarkBiome,
+            Holder<Biome> lushCavesBiome
+    ) {
         super();
         this.configuredSeed = seed;
         this.biomeSize = biomeSize;
         this.subBiomeRate = subBiomeRate;
         this.mutatedBiomeRate = mutatedBiomeRate;
         this.regionManager = regionManager;
-        this.possibleBiomes = List.copyOf(regionManager.allBiomes());
+        this.deepDarkBiome = deepDarkBiome;
+        this.lushCavesBiome = lushCavesBiome;
+        List<Holder<Biome>> biomes = new ArrayList<>(regionManager.allBiomes());
+        if (!biomes.contains(deepDarkBiome)) {
+            biomes.add(deepDarkBiome);
+        }
+        if (!biomes.contains(lushCavesBiome)) {
+            biomes.add(lushCavesBiome);
+        }
+        this.possibleBiomes = List.copyOf(biomes);
     }
 
     private NoiseFields noise() {
@@ -77,7 +110,9 @@ public class UADBiomeSource extends BiomeSource {
                         new OpenSimplexNoise(resolved + 4242L),
                         new OpenSimplexNoise(resolved + 7919L),
                         new OpenSimplexNoise(resolved + 104729L),
-                        new OpenSimplexNoise(resolved + 314159L)
+                        new OpenSimplexNoise(resolved + 314159L),
+                        new OpenSimplexNoise(resolved + 271828L),
+                        new OpenSimplexNoise(resolved + 161803L)
                 );
             }
             return this.noise;
@@ -97,7 +132,82 @@ public class UADBiomeSource extends BiomeSource {
     @Override
     public Holder<Biome> getNoiseBiome(int quartX, int quartY, int quartZ, Climate.Sampler sampler) {
         BiomeSample center = sampleBaseBiome(quartX, quartZ);
-        return applyEdgeVariants(quartX, quartZ, center);
+        Holder<Biome> surface = applyEdgeVariants(quartX, quartZ, center);
+        return applyUndergroundPockets(quartX, quartY, quartZ, surface, center.region());
+    }
+
+    private Holder<Biome> applyUndergroundPockets(
+            int quartX,
+            int quartY,
+            int quartZ,
+            Holder<Biome> surface,
+            RegionManager.Region region
+    ) {
+        if (region == RegionManager.Region.NETHER || region == RegionManager.Region.END) {
+            return surface;
+        }
+        if (surface.is(BiomeTags.IS_NETHER) || surface.is(BiomeTags.IS_END)) {
+            return surface;
+        }
+
+        NoiseFields n = noise();
+
+        // Deep dark takes priority (lower band, rarer).
+        if (isInDeepDarkHeightBand(quartY)) {
+            double horizontal = (n.deepDark().eval(quartX * 0.012D, quartZ * 0.012D) + 1.0D) * 0.5D;
+            double vertical = (n.deepDark().eval(quartX * 0.018D, quartY * 0.08D, quartZ * 0.018D) + 1.0D) * 0.5D;
+            double score = horizontal * 0.72D + vertical * 0.28D;
+            if (score >= DEEP_DARK_CORE) {
+                return deepDarkBiome;
+            }
+            if (score >= DEEP_DARK_EDGE) {
+                double edgeNoise = (n.pocket().eval(quartX * 0.09D + 90.0D, quartZ * 0.09D - 40.0D) + 1.0D) * 0.5D;
+                double edgeThreshold = DEEP_DARK_EDGE + (DEEP_DARK_CORE - DEEP_DARK_EDGE) * edgeNoise;
+                if (score >= edgeThreshold) {
+                    return deepDarkBiome;
+                }
+            }
+        }
+
+        // Lush caves: mid underground humidity-like pockets (vanilla-inspired).
+        if (isInLushCavesHeightBand(quartY)) {
+            double horizontal = (n.lushCaves().eval(quartX * 0.02D, quartZ * 0.02D) + 1.0D) * 0.5D;
+            double vertical = (n.lushCaves().eval(quartX * 0.025D, quartY * 0.06D, quartZ * 0.025D) + 1.0D) * 0.5D;
+            double score = horizontal * 0.65D + vertical * 0.35D;
+            if (score >= LUSH_CAVES_CORE) {
+                return lushCavesBiome;
+            }
+            if (score >= LUSH_CAVES_EDGE) {
+                double edgeNoise = (n.pocket().eval(quartX * 0.1D - 55.0D, quartZ * 0.1D + 33.0D) + 1.0D) * 0.5D;
+                double edgeThreshold = LUSH_CAVES_EDGE + (LUSH_CAVES_CORE - LUSH_CAVES_EDGE) * edgeNoise;
+                if (score >= edgeThreshold) {
+                    return lushCavesBiome;
+                }
+            }
+        }
+
+        return surface;
+    }
+
+    /**
+     * quartY = blockY / 4.
+     * below-zero: ~Y=-48..-12 (aligned with raised ancient city); above-zero: ~Y=4..56.
+     */
+    private static boolean isInDeepDarkHeightBand(int quartY) {
+        if (UADTerrainSampler.generateBelowZero()) {
+            return quartY >= -12 && quartY <= -3;
+        }
+        return quartY >= 1 && quartY <= 14;
+    }
+
+    /**
+     * Lush caves sit above deep dark when below-zero, spanning mid caves like vanilla.
+     */
+    private static boolean isInLushCavesHeightBand(int quartY) {
+        if (UADTerrainSampler.generateBelowZero()) {
+            return quartY >= -10 && quartY <= 10;
+        }
+        return quartY >= 0 && quartY <= 16;
     }
 
     private int effectiveBiomeSize() {

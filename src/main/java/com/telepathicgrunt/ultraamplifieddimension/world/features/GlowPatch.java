@@ -2,6 +2,7 @@ package com.telepathicgrunt.ultraamplifieddimension.world.features;
 
 import com.mojang.serialization.Codec;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADBlocks;
+import com.telepathicgrunt.ultraamplifieddimension.utils.GeneralUtils;
 import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.CountConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +30,7 @@ public class GlowPatch extends Feature<CountConfig> {
             GLOWBLOCK_MAP.put(Blocks.GRASS_BLOCK.defaultBlockState(), UADBlocks.GLOWGRASS_BLOCK.get().defaultBlockState());
             GLOWBLOCK_MAP.put(Blocks.MYCELIUM.defaultBlockState(), UADBlocks.GLOWMYCELIUM.get().defaultBlockState());
             GLOWBLOCK_MAP.put(Blocks.STONE.defaultBlockState(), UADBlocks.GLOWSTONE_ORE.get().defaultBlockState());
+            GLOWBLOCK_MAP.put(Blocks.DEEPSLATE.defaultBlockState(), UADBlocks.GLOWSTONE_ORE.get().defaultBlockState());
             GLOWBLOCK_MAP.put(Blocks.PODZOL.defaultBlockState(), UADBlocks.GLOWPODZOL.get().defaultBlockState());
             GLOWBLOCK_MAP.put(Blocks.SAND.defaultBlockState(), UADBlocks.GLOWSAND.get().defaultBlockState());
             GLOWBLOCK_MAP.put(Blocks.RED_SAND.defaultBlockState(), UADBlocks.RED_GLOWSAND.get().defaultBlockState());
@@ -71,10 +73,13 @@ public class GlowPatch extends Feature<CountConfig> {
             BlockState chosenAboveBlock = cachedChunk.getBlockState(blockposMutable);
             BlockState chosenBlock = cachedChunk.getBlockState(blockposMutable.move(Direction.DOWN));
 
-            if (chosenBlock.is(Blocks.STONE)) {
-                cachedChunk.setBlockState(blockposMutable, GLOWBLOCK_MAP.get(chosenBlock), false);
+            if (chosenBlock.is(Blocks.STONE) || chosenBlock.is(Blocks.DEEPSLATE)) {
+                BlockState glow = GLOWBLOCK_MAP.get(chosenBlock);
+                if (glow != null) {
+                    GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, glow);
+                }
             } else if (GLOWBLOCK_MAP.containsKey(chosenBlock) && chosenAboveBlock.isAir()) {
-                cachedChunk.setBlockState(blockposMutable, GLOWBLOCK_MAP.get(chosenBlock), false);
+                GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, GLOWBLOCK_MAP.get(chosenBlock));
             }
         }
 

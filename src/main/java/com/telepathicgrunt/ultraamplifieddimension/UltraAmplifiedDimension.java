@@ -11,6 +11,7 @@ import com.telepathicgrunt.ultraamplifieddimension.modInit.UADBlocks;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADCarvers;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADCreativeTabs;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADFeatures;
+import com.telepathicgrunt.ultraamplifieddimension.modInit.UADHeightProviders;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADPlacements;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADProcessors;
 import com.telepathicgrunt.ultraamplifieddimension.modInit.UADTreeDecoratorTypes;
@@ -55,6 +56,7 @@ public class UltraAmplifiedDimension {
         UADProcessors.STRUCTURE_PROCESSORS.register(modEventBus);
         UADTreeDecoratorTypes.TREE_DECORATOR_TYPES.register(modEventBus);
         UADPlacements.PLACEMENT_MODIFIERS.register(modEventBus);
+        UADHeightProviders.HEIGHT_PROVIDERS.register(modEventBus);
         UADCarvers.WORLD_CARVERS.register(modEventBus);
 
         forgeBus.addListener(UADDimension::levelTick);

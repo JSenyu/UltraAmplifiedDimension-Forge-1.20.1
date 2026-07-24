@@ -2,6 +2,7 @@ package com.telepathicgrunt.ultraamplifieddimension.modInit;
 
 import com.telepathicgrunt.ultraamplifieddimension.UltraAmplifiedDimension;
 import com.telepathicgrunt.ultraamplifieddimension.world.processors.CeilingVinePostProcessor;
+import com.telepathicgrunt.ultraamplifieddimension.world.processors.ClearInvalidBlockEntityNbtProcessor;
 import com.telepathicgrunt.ultraamplifieddimension.world.processors.RemoveFloatingBlocksProcessor;
 import com.telepathicgrunt.ultraamplifieddimension.world.processors.ReplaceAirOnlyProcessor;
 import com.telepathicgrunt.ultraamplifieddimension.world.processors.ReplaceLiquidOnlyProcessor;
@@ -38,4 +39,7 @@ public class UADProcessors {
 
     public static final RegistryObject<StructureProcessorType<CeilingVinePostProcessor>> CEILING_VINE_POST_PROCESSOR =
             STRUCTURE_PROCESSORS.register("ceiling_vine_post_processor", () -> () -> CeilingVinePostProcessor.CODEC);
+
+    public static final RegistryObject<StructureProcessorType<ClearInvalidBlockEntityNbtProcessor>> CLEAR_INVALID_BLOCK_ENTITY_NBT_PROCESSOR =
+            STRUCTURE_PROCESSORS.register("clear_invalid_block_entity_nbt_processor", () -> () -> ClearInvalidBlockEntityNbtProcessor.CODEC);
 }

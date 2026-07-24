@@ -103,6 +103,11 @@ public final class UADStructureTerraformer {
     }
 
     public ApplyResult apply(double noiseValue, int x, int y, int z) {
+        // Never let structure kernels erase the bedrock floor band.
+        if (y <= UADTerrainSampler.minY() + 5) {
+            return new ApplyResult(Math.max(noiseValue, 1.0D), false);
+        }
+
         boolean forceAir = false;
         ObjectListIterator<Piece> pieceIt = pieces.iterator();
         while (pieceIt.hasNext()) {

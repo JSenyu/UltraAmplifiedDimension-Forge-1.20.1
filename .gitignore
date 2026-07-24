@@ -33,6 +33,10 @@ local-maven
 # leftover empty dir if a previous clean-run was locked on Windows
 /clean-run/
 
+# local launch helpers (not versioned)
+/run-client.bat
+/run-server.bat
+
 # local 1.16.5 reference copy (not versioned)
 /old/
 

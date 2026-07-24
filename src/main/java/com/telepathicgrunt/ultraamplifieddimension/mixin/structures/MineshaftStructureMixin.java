@@ -16,7 +16,7 @@ public abstract class MineshaftStructureMixin {
     @Inject(method = "generatePiecesAndAdjust", at = @At("RETURN"))
     private void uad_clampHeight(StructurePiecesBuilder builder, Structure.GenerationContext context, CallbackInfoReturnable<Integer> cir) {
         if (context.chunkGenerator() instanceof UADChunkGenerator) {
-            builder.moveInsideHeights(context.random(), UADStructureHeights.UNDERGROUND_MIN, UADStructureHeights.UNDERGROUND_MAX);
+            builder.moveInsideHeights(context.random(), UADStructureHeights.undergroundMin(), UADStructureHeights.undergroundMax());
         }
     }
 }

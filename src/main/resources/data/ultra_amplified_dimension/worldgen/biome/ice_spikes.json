@@ -31,6 +31,7 @@
       "ultra_amplified_dimension:ponds/ice"
     ],
     [
+      "ultra_amplified_dimension:misc/amethyst_geode",
       "ultra_amplified_dimension:misc/glow_patch_underground",
       "ultra_amplified_dimension:misc/contain_liquid_for_oceans",
       "ultra_amplified_dimension:columns/vertical_snow",
@@ -68,7 +69,9 @@
       "ultra_amplified_dimension:disk/ice_dry",
       "ultra_amplified_dimension:ores/ellipsoid_ice"
     ],
-    [],
+    [
+      "minecraft:glow_lichen"
+    ],
     [
       "ultra_amplified_dimension:springs/water",
       "ultra_amplified_dimension:springs/water_narrow_range",

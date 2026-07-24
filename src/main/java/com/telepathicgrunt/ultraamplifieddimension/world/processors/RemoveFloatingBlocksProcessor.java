@@ -33,15 +33,18 @@ public class RemoveFloatingBlocksProcessor extends StructureProcessor {
         if (structureBlockInfoWorld.state().isAir() || structureBlockInfoWorld.state().getBlock() instanceof LiquidBlock) {
             // set the block in the world so that canSurvive's result changes
             cachedChunk.setBlockState(mutable, structureBlockInfoWorld.state(), false);
+            cachedChunk.removeBlockEntity(mutable);
             BlockState aboveWorldState = worldView.getBlockState(mutable.move(Direction.UP));
 
             // detects the first invalidly placed block before going into a while loop
             if (!aboveWorldState.canSurvive(worldView, mutable)) {
                 cachedChunk.setBlockState(mutable, structureBlockInfoWorld.state(), false);
+                cachedChunk.removeBlockEntity(mutable);
                 aboveWorldState = worldView.getBlockState(mutable.move(Direction.UP));
 
                 while (mutable.getY() < worldView.getMaxBuildHeight() && !aboveWorldState.canSurvive(worldView, mutable)) {
                     cachedChunk.setBlockState(mutable, structureBlockInfoWorld.state(), false);
+                    cachedChunk.removeBlockEntity(mutable);
                     aboveWorldState = worldView.getBlockState(mutable.move(Direction.UP));
                 }
             }

@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.telepathicgrunt.ultraamplifieddimension.UltraAmplifiedDimension;
 import com.telepathicgrunt.ultraamplifieddimension.utils.GeneralUtils;
 import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.NbtFeatureConfig;
+import com.telepathicgrunt.ultraamplifieddimension.world.processors.ClearInvalidBlockEntityNbtProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -78,6 +79,7 @@ public class NbtFeature extends Feature<NbtFeatureConfig> {
                     .getHolder(ResourceKey.create(Registries.PROCESSOR_LIST, config.processor))
                     .ifPresent(holder -> holder.value().list().forEach(settings::addProcessor));
         }
+        settings.addProcessor(ClearInvalidBlockEntityNbtProcessor.INSTANCE);
 
         BlockPos placePos = mutable.set(position).move(-halfLengths.getX(), 0, -halfLengths.getZ());
         template.placeInWorld(world, placePos, placePos, settings, random, 2);

@@ -54,7 +54,7 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
             ).apply(instance, instance.stable(UADChunkGenerator::new))
     );
 
-    private static final int BIOME_CACHE_LIMIT = 256;
+    private static final int BIOME_CACHE_LIMIT = 1024;
 
     private final int seaLevel;
     private final Aquifer.FluidPicker fluidPicker;
@@ -220,7 +220,6 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                             int z = blockMinZ + zNoise * UADTerrainSampler.CELL_WIDTH + zSection;
                             int zInChunk = z & 15;
                             double zd = (double) zSection / (double) UADTerrainSampler.CELL_WIDTH;
-                            Holder<Biome> biome = getNoiseBiome(randomState, x, z);
 
                             for (int ySection = UADTerrainSampler.CELL_HEIGHT - 1; ySection >= 0; --ySection) {
                                 int y = terrainMinY + yNoise * UADTerrainSampler.CELL_HEIGHT + ySection;
@@ -240,6 +239,8 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                                 UADStructureTerraformer.ApplyResult terraform = terraformer.apply(noiseValue, x, y, z);
                                 noiseValue = terraform.density();
 
+                                Holder<Biome> biome = getNoiseBiome(randomState, x, y, z);
+
                                 BlockState state;
                                 if (terraform.forceAir()) {
                                     // BEARD_BOX cavities must stay dry below sea level (otherwise terrainBlock fills water).
@@ -247,7 +248,7 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                                 } else {
                                     state = UADTerrainBlocks.terrainBlock(
                                             noiseValue, biome, x, y, z, this.seaLevel, genSettings,
-                                            pos -> getNoiseBiome(randomState, pos.getX(), pos.getZ())
+                                            pos -> getNoiseBiome(randomState, pos.getX(), pos.getY(), pos.getZ())
                                     );
                                 }
 
@@ -274,9 +275,12 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
         return chunk;
     }
 
-    private Holder<Biome> getNoiseBiome(RandomState randomState, int x, int z) {
+    private Holder<Biome> getNoiseBiome(RandomState randomState, int x, int y, int z) {
         Long2ObjectOpenHashMap<Holder<Biome>> cache = biomeCache.get();
-        long key = BlockPos.asLong(x, 0, z);
+        int quartX = QuartPos.fromBlock(x);
+        int quartY = QuartPos.fromBlock(y);
+        int quartZ = QuartPos.fromBlock(z);
+        long key = BlockPos.asLong(quartX, quartY, quartZ);
         Holder<Biome> cached = cache.get(key);
         if (cached != null) {
             return cached;
@@ -284,12 +288,7 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
         if (cache.size() > BIOME_CACHE_LIMIT) {
             cache.clear();
         }
-        Holder<Biome> biome = this.biomeSource.getNoiseBiome(
-                QuartPos.fromBlock(x),
-                QuartPos.fromBlock(this.seaLevel),
-                QuartPos.fromBlock(z),
-                randomState.sampler()
-        );
+        Holder<Biome> biome = this.biomeSource.getNoiseBiome(quartX, quartY, quartZ, randomState.sampler());
         cache.put(key, biome);
         return biome;
     }
@@ -330,7 +329,6 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
         terrainSampler.fillNoiseColumn(c10, noiseX + 1, noiseZ);
         terrainSampler.fillNoiseColumn(c11, noiseX + 1, noiseZ + 1);
 
-        Holder<Biome> biome = getNoiseBiome(randomState, x, z);
         int terrainMinY = UADTerrainSampler.minY();
 
         for (int y = minY + height - 1; y >= minY; --y) {
@@ -347,9 +345,10 @@ public class UADChunkGenerator extends NoiseBasedChunkGenerator {
                         c00[yNoise + 1], c01[yNoise + 1], c10[yNoise + 1], c11[yNoise + 1],
                         xd, yd, zd
                 );
+                Holder<Biome> biome = getNoiseBiome(randomState, x, y, z);
                 state = UADTerrainBlocks.terrainBlock(
                         noiseValue, biome, x, y, z, this.seaLevel, genSettings,
-                        pos -> getNoiseBiome(randomState, pos.getX(), pos.getZ())
+                        pos -> getNoiseBiome(randomState, pos.getX(), pos.getY(), pos.getZ())
                 );
             }
 

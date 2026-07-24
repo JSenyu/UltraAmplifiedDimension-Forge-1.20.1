@@ -78,9 +78,9 @@
 | 选项 | 默认 | 说明 |
 |------|------|------|
 | `enableUadDimension` | `true` | 是否启用额外 UAD 维度。`false` 时无法通过传送门前往该维度。 |
-| `setUadAsDefaultDimension` | `false` | 「默认」世界类型的**主世界**换成 UAD；原版主世界保留为 `original_overworld`，放大传送门可往返。若开启下一选项则忽略本项。 |
-| `overrideVanillaOverworld` | `false` | 主世界直接变成 UAD（整档只要 UAD）；**禁用**放大传送门。优先级高于上一选项。 |
-| `generateBelowZero` | `false` | `false`：UAD 地形地板在 Y=0，以下为空；`true`：地形延伸到 Y=-64..0（与上方放大地形同一套噪声）。仅对新区块生效。 |
+| `setUadAsDefaultDimension` | `false` | 「默认」世界类型的**主世界**换成 UAD；原版主世界保留为 `original_overworld`，放大传送门可往返。此时**不再加载**独立的 `ultra_amplified_dimension` 维度（避免 `/execute in` 里重复）。若开启下一选项则忽略本项。 |
+| `overrideVanillaOverworld` | `false` | 主世界直接变成 UAD（整档只要 UAD）；**禁用**放大传送门，并同样省略独立 UAD 维度。优先级高于上一选项。 |
+| `generateBelowZero` | `false` | `false`：地形地板在 Y=0（基岩约在 Y0），Y&lt;0 为空；远古城市与幽匿口袋约在 Y8..48，周围为深板岩。`true`：地形延伸到 Y=-64，基岩在维度底部；Y&lt;0 以深板岩为主，并用洞穴/面条噪声挖出**干燥洞穴**（近底部岩浆）；另有繁茂洞穴口袋；远古城市约在 Y=-34..-22（避开基岩）；并生成紫水晶晶洞。仅对新区块 / 新世界生效。 |
 
 **怎么选：**
 
@@ -91,6 +91,13 @@
 | 不改配置，单次选用 UAD | 创建世界时手选世界类型「Ultra Amplified」 |
 
 手选 UAD 世界类型不依赖上述两个开关；它们只影响「默认」世界类型的主世界生成器。
+
+### 深暗之域与远古城市
+
+- 幽匿群系以**地下高度口袋**形式出现（不占用地表群系面积），边缘有噪声过渡；另有繁茂洞穴口袋（含原版洞穴藤蔓等装饰）。
+- 结构定位：`/locate structure ultra_amplified_dimension:ancient_city`
+- 群系定位：`/locate biome ultra_amplified_dimension:deep_dark`、`/locate biome ultra_amplified_dimension:lush_caves`
+- 高度与基岩/深板岩布局随 `generateBelowZero` 变化（见上表）。
 
 ## 构建
 

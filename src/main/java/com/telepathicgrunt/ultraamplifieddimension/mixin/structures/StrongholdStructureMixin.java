@@ -16,7 +16,7 @@ public abstract class StrongholdStructureMixin {
     @Inject(method = "generatePieces", at = @At("TAIL"))
     private static void uad_clampHeight(StructurePiecesBuilder builder, Structure.GenerationContext context, CallbackInfo ci) {
         if (context.chunkGenerator() instanceof UADChunkGenerator) {
-            builder.moveInsideHeights(context.random(), UADStructureHeights.UNDERGROUND_MIN, UADStructureHeights.UNDERGROUND_MAX);
+            builder.moveInsideHeights(context.random(), UADStructureHeights.undergroundMin(), UADStructureHeights.undergroundMax());
         }
     }
 }

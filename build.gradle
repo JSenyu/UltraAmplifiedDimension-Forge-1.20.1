@@ -43,6 +43,8 @@ minecraft {
         }
 
         client {
+            // Game process heap (not the Gradle daemon)
+            jvmArgs '-Xms2G', '-Xmx8G'
         }
 
         server {

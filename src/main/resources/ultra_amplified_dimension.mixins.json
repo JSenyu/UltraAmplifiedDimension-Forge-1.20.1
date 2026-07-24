@@ -9,6 +9,7 @@
     "dimension.WorldOptionsMixin",
     "dimension.WorldPresetsMixin",
     "dimension.DedicatedServerWorldDimensionDataMixin",
+    "dimension.WorldDimensionsBakeMixin",
     "features.CocoaDecoratorMixin",
     "features.BeehiveDecoratorMixin",
     "structures.DesertPyramidPieceMixin",

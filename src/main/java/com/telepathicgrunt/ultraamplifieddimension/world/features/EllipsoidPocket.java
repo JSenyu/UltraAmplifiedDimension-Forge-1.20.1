@@ -1,6 +1,7 @@
 package com.telepathicgrunt.ultraamplifieddimension.world.features;
 
 import com.mojang.serialization.Codec;
+import com.telepathicgrunt.ultraamplifieddimension.utils.GeneralUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
@@ -8,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -36,10 +38,7 @@ public class EllipsoidPocket extends Feature<OreConfiguration> {
         float angleOfRotation = (float) (Math.PI * random.nextFloat());
         float sinOfAngle = Mth.sin(angleOfRotation);
         float cosOfAngle = Mth.cos(angleOfRotation);
-        OreConfiguration.TargetBlockState targetState = config.targetStates.get(0);
-        BlockState placementState = targetState.state;
         float size = config.size * 0.5f;
-        boolean solidState = placementState.canOcclude();
         ChunkAccess cachedChunk;
         float stretchedFactor = 0.7f;
         if (config.size < 10) {
@@ -73,30 +72,47 @@ public class EllipsoidPocket extends Feature<OreConfiguration> {
                         cachedChunk = getCachedChunk(level, blockposMutable);
 
                         blockToReplace = cachedChunk.getBlockState(blockposMutable);
-                        if (targetState.target.test(blockToReplace, random) || blockToReplace.is(Tags.Blocks.ORES)) {
-                            if (solidState) {
-                                cachedChunk.setBlockState(blockposMutable, placementState, false);
-                            } else {
-                                boolean touchingLiquid = false;
-                                for (Direction direction : Direction.values()) {
-                                    if (direction != Direction.DOWN) {
-                                        blockposMutable.move(direction);
-                                        cachedChunk = getCachedChunk(level, blockposMutable);
+                        if (blockToReplace.hasBlockEntity() || blockToReplace.is(Blocks.BEDROCK)) {
+                            continue;
+                        }
 
-                                        if (!cachedChunk.getBlockState(blockposMutable).getFluidState().isEmpty()) {
-                                            touchingLiquid = true;
-                                            blockposMutable.move(direction.getOpposite());
-                                            break;
-                                        }
+                        BlockState placementState = null;
+                        for (OreConfiguration.TargetBlockState targetState : config.targetStates) {
+                            if (targetState.target.test(blockToReplace, random)) {
+                                placementState = targetState.state;
+                                break;
+                            }
+                        }
+                        if (placementState == null && blockToReplace.is(Tags.Blocks.ORES) && !config.targetStates.isEmpty()) {
+                            placementState = config.targetStates.get(0).state;
+                        }
+                        if (placementState == null) {
+                            continue;
+                        }
 
-                                        blockposMutable.move(direction.getOpposite());
-                                    }
-                                }
-
-                                if (!touchingLiquid) {
+                        boolean solidState = placementState.canOcclude();
+                        if (solidState) {
+                            GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, placementState);
+                        } else {
+                            boolean touchingLiquid = false;
+                            for (Direction direction : Direction.values()) {
+                                if (direction != Direction.DOWN) {
+                                    blockposMutable.move(direction);
                                     cachedChunk = getCachedChunk(level, blockposMutable);
-                                    cachedChunk.setBlockState(blockposMutable, placementState, false);
+
+                                    if (!cachedChunk.getBlockState(blockposMutable).getFluidState().isEmpty()) {
+                                        touchingLiquid = true;
+                                        blockposMutable.move(direction.getOpposite());
+                                        break;
+                                    }
+
+                                    blockposMutable.move(direction.getOpposite());
                                 }
+                            }
+
+                            if (!touchingLiquid) {
+                                cachedChunk = getCachedChunk(level, blockposMutable);
+                                GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, placementState);
                             }
                         }
                     }

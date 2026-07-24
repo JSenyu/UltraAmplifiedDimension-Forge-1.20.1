@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -17,6 +18,12 @@ public final class UADDimension {
     public static final ResourceKey<Level> UAD_WORLD_KEY = ResourceKey.create(
             Registries.DIMENSION,
             ResourceLocation.fromNamespaceAndPath(UltraAmplifiedDimension.MODID, UltraAmplifiedDimension.MODID)
+    );
+
+    /** LevelStem registry key matching {@link #UAD_WORLD_KEY}. */
+    public static final ResourceKey<LevelStem> UAD_LEVEL_STEM_KEY = ResourceKey.create(
+            Registries.LEVEL_STEM,
+            UAD_WORLD_KEY.location()
     );
 
     public static final DeferredRegister<Codec<? extends ChunkGenerator>> CHUNK_GENERATORS =

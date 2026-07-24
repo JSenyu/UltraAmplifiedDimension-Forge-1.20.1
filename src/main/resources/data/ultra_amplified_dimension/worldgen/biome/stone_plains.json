@@ -32,6 +32,7 @@
       "ultra_amplified_dimension:ponds/underground_water_gravel"
     ],
     [
+      "ultra_amplified_dimension:misc/amethyst_geode",
       "ultra_amplified_dimension:misc/glow_patch_surface",
       "ultra_amplified_dimension:misc/glow_patch_underground",
       "ultra_amplified_dimension:misc/contain_liquid_for_oceans",
@@ -71,7 +72,9 @@
       "ultra_amplified_dimension:ores/ore_andesite_sealevel",
       "ultra_amplified_dimension:ores/ore_diorite_sealevel"
     ],
-    [],
+    [
+      "minecraft:glow_lichen"
+    ],
     [
       "ultra_amplified_dimension:springs/water",
       "ultra_amplified_dimension:springs/water_narrow_range",

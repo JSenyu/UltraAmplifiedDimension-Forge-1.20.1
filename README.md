@@ -77,9 +77,9 @@ Restart the game after changing these. They apply to **new worlds** only.
 | Option | Default | Description |
 |--------|---------|-------------|
 | `enableUadDimension` | `true` | Extra UAD dimension. `false` disables portal travel to it. |
-| `setUadAsDefaultDimension` | `false` | Default world type uses UAD as Overworld; vanilla kept as `original_overworld`; portals remain. Ignored if override is on. |
-| `overrideVanillaOverworld` | `false` | Overworld becomes UAD only; **disables** amplified portals. Overrides the option above. |
-| `generateBelowZero` | `false` | `false`: terrain floor at Y=0 (void below); `true`: generate UAD terrain for Y=-64..0 as well. New chunks only. |
+| `setUadAsDefaultDimension` | `false` | Default world type uses UAD as Overworld; vanilla kept as `original_overworld`; portals remain. The separate `ultra_amplified_dimension` LevelStem is omitted (no duplicate in `/execute in`). Ignored if override is on. |
+| `overrideVanillaOverworld` | `false` | Overworld becomes UAD only; **disables** amplified portals and also omits the separate UAD dimension. Overrides the option above. |
+| `generateBelowZero` | `false` | `false`: floor at Y=0 (bedrock near Y0), void below; deep dark pockets + ancient cities around Y8..48 with deepslate. `true`: terrain to Y=-64, bedrock at bottom (protected from carvers/features); Y&lt;0 uses deepslate mass + dry cheese/noodle caves (lava near bottom); ores/glow lichen/glow patches reach negative Y with deepslate ore variants; mineshafts/strongholds can place below Y0; lush caves pockets; ancient cities around Y=-34..-22; amethyst geodes. New chunks/worlds only. |
 
 **Quick guide:**
 
@@ -90,6 +90,12 @@ Restart the game after changing these. They apply to **new worlds** only.
 | One-off UAD without config | Pick world type “Ultra Amplified” when creating |
 
 Picking the Ultra Amplified world type does not need the two switches; those only rewrite the Default world type’s Overworld generator.
+
+### Deep Dark & Ancient Cities
+
+- Deep Dark appears as **underground height pockets** (does not steal surface biome area), with noisy edges; lush caves pockets include vanilla cave vines / moss features.
+- Locate: `/locate structure ultra_amplified_dimension:ancient_city`, `/locate biome ultra_amplified_dimension:deep_dark`, `/locate biome ultra_amplified_dimension:lush_caves`
+- Heights / bedrock / deepslate follow `generateBelowZero` (see table above).
 
 ## Building
 

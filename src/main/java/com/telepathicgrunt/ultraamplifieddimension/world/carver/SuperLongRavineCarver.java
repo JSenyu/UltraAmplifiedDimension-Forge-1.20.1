@@ -143,7 +143,7 @@ public class SuperLongRavineCarver extends WorldCarver<RavineConfig> {
                 for (int y = maxY; y > minY; --y) {
                     double d4 = (y - 1 + 0.5D - yRange) / placementYBound;
 
-                    if (xzSquaredModified * this.wallLedges[y - 1] + d4 * d4 / 6.0D >= 1.0D) {
+                    if (xzSquaredModified * this.wallLedges[Mth.clamp(y - 1, 0, this.wallLedges.length - 1)] + d4 * d4 / 6.0D >= 1.0D) {
                         continue;
                     }
 
@@ -185,7 +185,7 @@ public class SuperLongRavineCarver extends WorldCarver<RavineConfig> {
     }
 
     private static boolean canCarveBlock(BlockState state, BlockState aboveState) {
-        return CARVABLE_BLOCKS.contains(state.getBlock());
+        return !state.is(Blocks.BEDROCK) && CARVABLE_BLOCKS.contains(state.getBlock());
     }
 
     private static Set<Block> createCarvableBlocks() {

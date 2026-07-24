@@ -155,7 +155,8 @@ public class CaveCavityCarver extends WorldCarver<CaveConfig> {
                     }
 
                     double ySquaringModified = (y - 1 + 0.5D - yRange) / placementYBound;
-                    if (xzSquaredModified * this.ledgeWidthArrayYIndex[y - 1] + ySquaringModified * ySquaringModified / 6.0D + random.nextFloat() * 0.015F >= 1.0D) {
+                    int ledgeIndex = Mth.clamp(y - 1, 0, this.ledgeWidthArrayYIndex.length - 1);
+                    if (xzSquaredModified * this.ledgeWidthArrayYIndex[ledgeIndex] + ySquaringModified * ySquaringModified / 6.0D + random.nextFloat() * 0.015F >= 1.0D) {
                         continue;
                     }
 
@@ -240,7 +241,7 @@ public class CaveCavityCarver extends WorldCarver<CaveConfig> {
     }
 
     private static boolean canCarveBlock(BlockState state, BlockState aboveState) {
-        return CARVABLE_BLOCKS.contains(state.getBlock());
+        return !state.is(Blocks.BEDROCK) && CARVABLE_BLOCKS.contains(state.getBlock());
     }
 
     private static Set<Block> createCarvableBlocks() {

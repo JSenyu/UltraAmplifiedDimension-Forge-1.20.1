@@ -1,12 +1,12 @@
 package com.telepathicgrunt.ultraamplifieddimension.world.features;
 
 import com.mojang.serialization.Codec;
+import com.telepathicgrunt.ultraamplifieddimension.utils.GeneralUtils;
 import com.telepathicgrunt.ultraamplifieddimension.world.features.configs.DiskDryConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -50,16 +50,18 @@ public class DiskDry extends Feature<DiskDryConfig> {
                         BlockState blockState = cachedChunk.getBlockState(blockposMutable.move(Direction.DOWN));
 
                         if (!config.exposedOnly || !aboveBlockState.canOcclude()) {
-                            for (BlockState targetBlockState : config.targets) {
-                                if (blockState.is(targetBlockState.getBlock())) {
-                                    cachedChunk.setBlockState(blockposMutable, config.state, false);
-                                    ++placedBlocks;
+                            if (!blockState.hasBlockEntity()) {
+                                for (BlockState targetBlockState : config.targets) {
+                                    if (blockState.is(targetBlockState.getBlock())) {
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state);
+                                        ++placedBlocks;
 
-                                    if (aboveBlockState.is(Blocks.SNOW) && !aboveBlockState.canSurvive(level, blockposMutable)) {
-                                        cachedChunk.setBlockState(blockposMutable.move(Direction.UP), Blocks.AIR.defaultBlockState(), false);
-                                        blockposMutable.move(Direction.DOWN);
+                                        if (aboveBlockState.is(Blocks.SNOW) && !aboveBlockState.canSurvive(level, blockposMutable)) {
+                                            GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable.move(Direction.UP), Blocks.AIR.defaultBlockState());
+                                            blockposMutable.move(Direction.DOWN);
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }

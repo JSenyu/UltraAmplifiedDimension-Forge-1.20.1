@@ -79,7 +79,9 @@ public class HangingRuins extends Feature<NoneFeatureConfiguration> {
                 .setRotationPivot(halfLengths)
                 .setRotation(Rotation.getRandom(random))
                 .setMirror(Mirror.NONE)
-                .setIgnoreEntities(false);
+                // Structure NBT entities (paintings/item frames) desync TileX/Y/Z when rotated,
+                // spamming "Hanging entity at invalid position" on chunk load.
+                .setIgnoreEntities(true);
 
         BlockPos placePos = mutableMain.move(-halfLengths.getX(), -8, -halfLengths.getZ());
         template.placeInWorld(world, placePos, placePos, placementSettings, random, 2);

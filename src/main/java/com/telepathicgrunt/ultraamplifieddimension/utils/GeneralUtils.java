@@ -11,11 +11,15 @@ import net.minecraft.tags.TagKey;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.server.level.WorldGenRegion;
 
 import java.util.HashMap;
 import java.util.List;
@@ -119,6 +123,35 @@ public class GeneralUtils {
             IS_FULLCUBE_MAP.put(state, isFullCube);
         }
         return IS_FULLCUBE_MAP.get(state);
+    }
+
+    /**
+     * ProtoChunk.setBlockState does not clear block entities. Features that write through
+     * ChunkAccess must remove orphaned BEs when placing a non-BE block (e.g. packed_ice over a spawner).
+     * Never replaces bedrock (floor protection).
+     */
+    public static void setChunkBlockState(ChunkAccess chunk, BlockPos pos, BlockState state) {
+        if (chunk.getBlockState(pos).is(Blocks.BEDROCK)) {
+            return;
+        }
+        chunk.setBlockState(pos, state, false);
+        if (!state.hasBlockEntity()) {
+            chunk.removeBlockEntity(pos);
+        }
+    }
+
+    /**
+     * FEATURES stage allows writing only to the center chunk ± 1.
+     * Do not call {@link WorldGenLevel#ensureCanWrite} to test — it logs the far-chunk error.
+     */
+    public static boolean canWorldgenWrite(WorldGenLevel level, BlockPos pos) {
+        if (level instanceof WorldGenRegion region) {
+            ChunkPos center = region.getCenter();
+            int chunkX = pos.getX() >> 4;
+            int chunkZ = pos.getZ() >> 4;
+            return Math.abs(center.x - chunkX) <= 1 && Math.abs(center.z - chunkZ) <= 1;
+        }
+        return true;
     }
 
     public static BlockState orientateChest(BlockGetter blockView, BlockPos blockPos, BlockState blockState) {

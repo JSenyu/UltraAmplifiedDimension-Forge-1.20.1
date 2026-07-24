@@ -8,6 +8,8 @@
       "biome_size": 89,
       "sub_biome_rate": 0.44,
       "mutated_biome_rate": 0.42,
+      "deep_dark_biome": "ultra_amplified_dimension:deep_dark",
+      "lush_caves_biome": "ultra_amplified_dimension:lush_caves",
       "regions": {
         "ocean_biomes": [
           {

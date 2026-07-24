@@ -78,7 +78,7 @@ public class NonLiquidWaterfall extends Feature<TwoBlockStateConfig> {
             cachedChunk = level.getChunk(blockposMutable);
         }
 
-        cachedChunk.setBlockState(blockposMutable, config.state1, false);
+        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state1);
 
         if (emptySpot != null) {
             blockposMutable.move(emptySpot);
@@ -86,7 +86,7 @@ public class NonLiquidWaterfall extends Feature<TwoBlockStateConfig> {
                 cachedChunk = level.getChunk(blockposMutable);
             }
 
-            cachedChunk.setBlockState(blockposMutable, config.state1, false);
+            GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state1);
         }
 
         int ledgeOffsets = 0;
@@ -101,7 +101,7 @@ public class NonLiquidWaterfall extends Feature<TwoBlockStateConfig> {
             BlockState belowBlockState = cachedChunk.getBlockState(blockposMutable);
 
             if (!GeneralUtils.isFullCube(level, blockposMutable, belowBlockState) && belowBlockState.getFluidState().isEmpty()) {
-                cachedChunk.setBlockState(blockposMutable, config.state1, false);
+                GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state1);
                 continue;
             }
 
@@ -121,8 +121,8 @@ public class NonLiquidWaterfall extends Feature<TwoBlockStateConfig> {
 
                     if (!GeneralUtils.isFullCube(level, blockposMutable, belowSideBlockState) && belowSideBlockState.getFluidState().isEmpty()) {
                         blockposMutable.move(Direction.UP);
-                        cachedChunk.setBlockState(blockposMutable, config.state1, false);
-                        cachedChunk.setBlockState(blockposMutable.move(Direction.DOWN), config.state1, false);
+                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state1);
+                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable.move(Direction.DOWN), config.state1);
 
                         ledgeOffsets++;
                         deadEnd = false;
@@ -158,22 +158,24 @@ public class NonLiquidWaterfall extends Feature<TwoBlockStateConfig> {
 
                             BlockState blockStateAtPuddlePos = cachedChunk.getBlockState(blockposMutable);
 
-                            if (GeneralUtils.isFullCube(level, blockposMutable, blockStateAtPuddlePos) || !blockStateAtPuddlePos.getFluidState().isEmpty()) {
+                            if (!blockStateAtPuddlePos.hasBlockEntity()
+                                    && (GeneralUtils.isFullCube(level, blockposMutable, blockStateAtPuddlePos)
+                                    || !blockStateAtPuddlePos.getFluidState().isEmpty())) {
                                 BlockState aboveBlockState = cachedChunk.getBlockState(blockposMutable.move(Direction.UP));
                                 boolean isAboveFullCube = GeneralUtils.isFullCube(level, blockposMutable, aboveBlockState);
                                 blockposMutable.move(Direction.DOWN);
 
                                 if (GeneralUtils.isSurfaceBlock(blockStateAtPuddlePos) && !isAboveFullCube) {
-                                    cachedChunk.setBlockState(blockposMutable, config.state2, false);
+                                    GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state2);
 
                                     if (aboveBlockState.is(Blocks.SNOW)) {
-                                        cachedChunk.setBlockState(blockposMutable.above(), Blocks.AIR.defaultBlockState(), false);
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable.above(), Blocks.AIR.defaultBlockState());
                                     }
                                 } else {
                                     if (config.state1.is(BlockTags.ICE) && blockStateAtPuddlePos.getFluidState().is(FluidTags.LAVA)) {
-                                        cachedChunk.setBlockState(blockposMutable, Blocks.OBSIDIAN.defaultBlockState(), false);
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, Blocks.OBSIDIAN.defaultBlockState());
                                     } else {
-                                        cachedChunk.setBlockState(blockposMutable, config.state1, false);
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockposMutable, config.state1);
                                     }
                                 }
                             }

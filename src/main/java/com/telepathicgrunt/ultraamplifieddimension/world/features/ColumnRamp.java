@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
@@ -34,7 +33,6 @@ public class ColumnRamp extends Feature<ColumnConfig> {
     @Override
     public boolean place(FeaturePlaceContext<ColumnConfig> context) {
         WorldGenLevel world = context.level();
-        ChunkGenerator chunkGenerator = context.chunkGenerator();
         RandomSource rand = context.random();
         BlockPos position = context.origin();
         ColumnConfig columnConfig = context.config();
@@ -86,6 +84,12 @@ public class ColumnRamp extends Feature<ColumnConfig> {
         float xTurningValue = (float) Math.sin(randFloat * Math.PI * 2);
         float zTurningValue = (float) Math.cos(randFloat * Math.PI * 2);
 
+        // Abort early if the slanted ramp would leave the FEATURES write radius (center ± 1 chunk).
+        int maxReach = (heightDiff / 2) + getWidthAtHeight(heightDiff / 2, heightDiff + 5, minWidth) + 2;
+        if (!isBoundingBoxWritable(world, position, maxReach)) {
+            return false;
+        }
+
         int widthAtHeight = getWidthAtHeight(0, heightDiff + 5, minWidth);
 
         int xPosCeiling = position.getX() + getOffsetAtHeight(heightDiff + 1, heightDiff, xTurningValue);
@@ -97,12 +101,19 @@ public class ColumnRamp extends Feature<ColumnConfig> {
             for (int z = -widthAtHeight; z <= widthAtHeight; z++) {
                 if (x * x + z * z > widthAtHeight * widthAtHeight * 0.85 && x * x + z * z < widthAtHeight * widthAtHeight) {
 
-                    if (blockposMutable.getX() >> 4 != cachedChunk.getPos().x || blockposMutable.getZ() >> 4 != cachedChunk.getPos().z) {
-                        cachedChunk = world.getChunk(blockposMutable);
+                    blockposMutable.set(xPosCeiling + x, ceilingHeight + 2, zPosCeiling + z);
+                    if (!GeneralUtils.canWorldgenWrite(world, blockposMutable)) {
+                        return false;
                     }
+                    cachedChunk = getWritableChunk(world, cachedChunk, blockposMutable);
+                    BlockState block1 = cachedChunk.getBlockState(blockposMutable);
 
-                    BlockState block1 = cachedChunk.getBlockState(blockposMutable.set(xPosCeiling + x, ceilingHeight + 2, zPosCeiling + z));
-                    BlockState block2 = cachedChunk.getBlockState(blockposMutable.set(xPosFloor + x, bottomFloorHeight - 2, zPosFloor + z));
+                    blockposMutable.set(xPosFloor + x, bottomFloorHeight - 2, zPosFloor + z);
+                    if (!GeneralUtils.canWorldgenWrite(world, blockposMutable)) {
+                        return false;
+                    }
+                    cachedChunk = getWritableChunk(world, cachedChunk, blockposMutable);
+                    BlockState block2 = cachedChunk.getBlockState(blockposMutable);
 
                     if (!GeneralUtils.isFullCube(world, blockposMutable, block1) || !GeneralUtils.isFullCube(world, blockposMutable, block2)) {
                         return false;
@@ -145,29 +156,30 @@ public class ColumnRamp extends Feature<ColumnConfig> {
                         circleBounds *= (0.6f / (y - heightDiff));
                     }
 
-                    if (blockposMutable.getX() >> 4 != cachedChunk.getPos().x || blockposMutable.getZ() >> 4 != cachedChunk.getPos().z) {
-                        cachedChunk = world.getChunk(blockposMutable);
+                    if (!GeneralUtils.canWorldgenWrite(world, blockposMutable)) {
+                        continue;
                     }
+                    cachedChunk = getWritableChunk(world, cachedChunk, blockposMutable);
 
                     BlockState block = cachedChunk.getBlockState(blockposMutable);
                     if (!block.is(BlockTags.LEAVES) && !block.is(BlockTags.LOGS) && !irreplacableBlocks.contains(block.getBlock()) && xzDiffSquaredStretched <= circleBounds) {
                         if (blockposMutable.getY() < world.getSeaLevel()) {
-                            cachedChunk.setBlockState(blockposMutable, Blocks.WATER.defaultBlockState(), false);
+                            cachedChunk = setBlock(world, cachedChunk, blockposMutable, Blocks.WATER.defaultBlockState());
                         } else {
 
                             tempMutable.set(blockposMutable).move(Direction.DOWN);
                             if (columnConfig.snowy && Blocks.SNOW.defaultBlockState().canSurvive(world, blockposMutable)) {
-                                cachedChunk.setBlockState(blockposMutable, Blocks.SNOW.defaultBlockState(), false);
+                                cachedChunk = setBlock(world, cachedChunk, blockposMutable, Blocks.SNOW.defaultBlockState());
 
                                 BlockState belowBlock = cachedChunk.getBlockState(tempMutable);
                                 if (belowBlock.hasProperty(SnowyDirtBlock.SNOWY)) {
-                                    cachedChunk.setBlockState(tempMutable, belowBlock.setValue(SnowyDirtBlock.SNOWY, true), false);
+                                    cachedChunk = setBlock(world, cachedChunk, tempMutable, belowBlock.setValue(SnowyDirtBlock.SNOWY, true));
                                 }
                             } else {
                                 BlockState aboveBlock = cachedChunk.getBlockState(blockposMutable.move(Direction.UP));
                                 blockposMutable.move(Direction.DOWN);
                                 if (!aboveBlock.is(BlockTags.LOGS)) {
-                                    cachedChunk.setBlockState(blockposMutable, Blocks.AIR.defaultBlockState(), false);
+                                    cachedChunk = setBlock(world, cachedChunk, blockposMutable, Blocks.AIR.defaultBlockState());
                                 }
                             }
                         }
@@ -175,7 +187,7 @@ public class ColumnRamp extends Feature<ColumnConfig> {
                         tempMutable.set(blockposMutable).move(Direction.UP);
                         block = cachedChunk.getBlockState(tempMutable);
                         while (tempMutable.getY() < world.getMaxBuildHeight() && !block.canSurvive(world, tempMutable)) {
-                            cachedChunk.setBlockState(tempMutable, Blocks.AIR.defaultBlockState(), false);
+                            cachedChunk = setBlock(world, cachedChunk, tempMutable, Blocks.AIR.defaultBlockState());
                             block = cachedChunk.getBlockState(tempMutable.move(Direction.UP));
                         }
 
@@ -185,17 +197,17 @@ public class ColumnRamp extends Feature<ColumnConfig> {
 
                         if (GeneralUtils.isFullCube(world, blockposMutable, blockBelowAir)) {
                             if ((columnConfig.topBlock.getBlock() instanceof FallingBlock && blockBelowBelowAir.isAir()) || blockposMutable.getY() < world.getSeaLevel()) {
-                                cachedChunk.setBlockState(blockposMutable, columnConfig.middleBlock, false);
+                                cachedChunk = setBlock(world, cachedChunk, blockposMutable, columnConfig.middleBlock);
                             } else {
-                                cachedChunk.setBlockState(blockposMutable, columnConfig.topBlock, false);
+                                cachedChunk = setBlock(world, cachedChunk, blockposMutable, columnConfig.topBlock);
                                 tempMutable.set(blockposMutable).move(Direction.UP);
                                 BlockState aboveBlock = cachedChunk.getBlockState(tempMutable);
 
                                 if (columnConfig.snowy && aboveBlock.isAir() && Blocks.SNOW.defaultBlockState().canSurvive(world, tempMutable)) {
-                                    cachedChunk.setBlockState(tempMutable, Blocks.SNOW.defaultBlockState(), false);
+                                    cachedChunk = setBlock(world, cachedChunk, tempMutable, Blocks.SNOW.defaultBlockState());
 
                                     if (columnConfig.topBlock.hasProperty(SnowyDirtBlock.SNOWY)) {
-                                        cachedChunk.setBlockState(blockposMutable, columnConfig.topBlock.setValue(SnowyDirtBlock.SNOWY, true), false);
+                                        cachedChunk = setBlock(world, cachedChunk, blockposMutable, columnConfig.topBlock.setValue(SnowyDirtBlock.SNOWY, true));
                                     }
                                 }
                             }
@@ -218,6 +230,10 @@ public class ColumnRamp extends Feature<ColumnConfig> {
                     zDiff = z - position.getZ();
                     blockposMutable.set(x + xOffset, y + bottomFloorHeight, z + zOffset);
 
+                    if (!GeneralUtils.canWorldgenWrite(world, blockposMutable)) {
+                        continue;
+                    }
+
                     int xzDiffSquaredStretched = (xDiff * xDiff) + (zDiff * zDiff);
                     int circleBounds = (int) ((widthAtHeight - 1) * (widthAtHeight - 1) - 0.5F);
 
@@ -227,31 +243,35 @@ public class ColumnRamp extends Feature<ColumnConfig> {
 
                     if (y <= heightDiff && xzDiffSquaredStretched <= circleBounds) {
                         if (!GeneralUtils.isFullCube(world, blockposMutable, world.getBlockState(blockposMutable))) {
-                            world.setBlock(blockposMutable, columnConfig.insideBlock, 2);
+                            cachedChunk = setBlock(world, cachedChunk, blockposMutable, columnConfig.insideBlock);
                         }
                     } else if (y > heightDiff || xzDiffSquaredStretched <= (widthAtHeight + 3) * (widthAtHeight + 3)) {
                         for (int downward = 0; downward < 6 && y - downward >= -3; downward++) {
                             tempMutable.set(blockposMutable).move(Direction.DOWN, downward);
+                            if (!GeneralUtils.canWorldgenWrite(world, tempMutable)) {
+                                continue;
+                            }
+
                             BlockState block = world.getBlockState(tempMutable);
                             BlockState blockBelow = world.getBlockState(tempMutable.move(Direction.DOWN));
                             tempMutable.move(Direction.UP);
 
                             if (block == columnConfig.insideBlock) {
                                 if (tempMutable.getY() >= world.getSeaLevel() - 1 && downward == 1 && !(columnConfig.topBlock.getBlock() instanceof FallingBlock && blockBelow.isAir())) {
-                                    world.setBlock(tempMutable, columnConfig.topBlock, 2);
+                                    cachedChunk = setBlock(world, cachedChunk, tempMutable, columnConfig.topBlock);
 
                                     tempPos2.set(tempMutable).move(Direction.UP);
                                     BlockState aboveBlock = world.getBlockState(tempPos2);
 
                                     if (columnConfig.snowy && aboveBlock.isAir() && Blocks.SNOW.defaultBlockState().canSurvive(world, tempPos2)) {
-                                        world.setBlock(tempPos2, Blocks.SNOW.defaultBlockState(), 2);
+                                        cachedChunk = setBlock(world, cachedChunk, tempPos2, Blocks.SNOW.defaultBlockState());
 
                                         if (columnConfig.topBlock.hasProperty(SnowyDirtBlock.SNOWY)) {
-                                            world.setBlock(tempMutable, columnConfig.topBlock.setValue(SnowyDirtBlock.SNOWY, true), 2);
+                                            cachedChunk = setBlock(world, cachedChunk, tempMutable, columnConfig.topBlock.setValue(SnowyDirtBlock.SNOWY, true));
                                         }
                                     }
                                 } else {
-                                    world.setBlock(tempMutable, columnConfig.middleBlock, 2);
+                                    cachedChunk = setBlock(world, cachedChunk, tempMutable, columnConfig.middleBlock);
                                 }
                             }
                         }
@@ -261,6 +281,29 @@ public class ColumnRamp extends Feature<ColumnConfig> {
         }
 
         return true;
+    }
+
+    private static boolean isBoundingBoxWritable(WorldGenLevel world, BlockPos origin, int reach) {
+        return GeneralUtils.canWorldgenWrite(world, origin.offset(reach, 0, reach))
+                && GeneralUtils.canWorldgenWrite(world, origin.offset(-reach, 0, -reach))
+                && GeneralUtils.canWorldgenWrite(world, origin.offset(reach, 0, -reach))
+                && GeneralUtils.canWorldgenWrite(world, origin.offset(-reach, 0, reach));
+    }
+
+    private static ChunkAccess getWritableChunk(WorldGenLevel world, ChunkAccess cachedChunk, BlockPos pos) {
+        if (pos.getX() >> 4 != cachedChunk.getPos().x || pos.getZ() >> 4 != cachedChunk.getPos().z) {
+            return world.getChunk(pos);
+        }
+        return cachedChunk;
+    }
+
+    private static ChunkAccess setBlock(WorldGenLevel world, ChunkAccess cachedChunk, BlockPos pos, BlockState state) {
+        if (!GeneralUtils.canWorldgenWrite(world, pos)) {
+            return cachedChunk;
+        }
+        cachedChunk = getWritableChunk(world, cachedChunk, pos);
+        GeneralUtils.setChunkBlockState(cachedChunk, pos, state);
+        return cachedChunk;
     }
 
     private int getWidthAtHeight(int y, int heightDiff, int thinnestWidth) {

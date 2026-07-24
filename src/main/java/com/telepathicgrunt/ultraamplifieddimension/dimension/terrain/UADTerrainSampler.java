@@ -11,6 +11,9 @@ import java.util.stream.IntStream;
 /**
  * Column noise for UAD terrain fill. Sampling constants are fixed here;
  * datapack noise_router density does not drive this sampler.
+ *
+ * When {@code generateBelowZero} is enabled, Y&lt;0 is biased toward solid deepslate mass
+ * with cheese/noodle-style cave carving (dry air), instead of huge flooded voids.
  */
 public final class UADTerrainSampler {
     public static final int CELL_WIDTH = 2;
@@ -54,12 +57,16 @@ public final class UADTerrainSampler {
     private final PerlinNoise maxLimitNoise;
     private final PerlinNoise mainNoise;
     private final PerlinNoise depthNoise;
+    private final PerlinNoise cheeseCaveNoise;
+    private final PerlinNoise noodleCaveNoise;
 
     public UADTerrainSampler(RandomSource random) {
         this.minLimitNoise = PerlinNoise.createLegacyForBlendedNoise(random, IntStream.rangeClosed(-15, 0));
         this.maxLimitNoise = PerlinNoise.createLegacyForBlendedNoise(random, IntStream.rangeClosed(-15, 0));
         this.mainNoise = PerlinNoise.createLegacyForBlendedNoise(random, IntStream.rangeClosed(-7, 0));
         this.depthNoise = PerlinNoise.createLegacyForBlendedNoise(random, IntStream.rangeClosed(-15, 0));
+        this.cheeseCaveNoise = PerlinNoise.create(random.fork(), IntStream.rangeClosed(-2, 0));
+        this.noodleCaveNoise = PerlinNoise.create(random.fork(), IntStream.rangeClosed(-2, 0));
     }
 
     public static boolean generateBelowZero() {
@@ -102,6 +109,8 @@ public final class UADTerrainSampler {
 
     public void fillNoiseColumn(double[] noiseColumn, int noiseX, int noiseZ) {
         int sizeY = noiseSizeY();
+        int terrainMinY = minY();
+        boolean belowZero = generateBelowZero();
         double horizontalScale = 684.412D * XZ_SCALE;
         double verticalScale = 684.412D * Y_SCALE;
         double horizontalStretch = horizontalScale / XZ_FACTOR;
@@ -127,8 +136,63 @@ public final class UADTerrainSampler {
                 double t = ((double) noiseY - BOTTOM_SLIDE_OFFSET) / BOTTOM_SLIDE_SIZE;
                 sample = Mth.clampedLerp(BOTTOM_SLIDE_TARGET, sample, t);
             }
+
+            if (belowZero) {
+                sample = applyBelowZeroCaveDensity(sample, noiseX, noiseY, noiseZ, terrainMinY);
+            }
+
             noiseColumn[noiseY] = sample;
         }
+    }
+
+    /**
+     * Below Y=0: densify into a deepslate-like mass (vanilla deep layer), then carve
+     * cheese/noodle caves similar to 1.18+ noise caves. Cavities stay dry (see terrainBlock).
+     */
+    private double applyBelowZeroCaveDensity(double sample, int noiseX, int noiseY, int noiseZ, int terrainMinY) {
+        int approxY = terrainMinY + noiseY * CELL_HEIGHT;
+        if (approxY >= 8) {
+            return sample;
+        }
+
+        // Near-solid deepslate mass like vanilla below Y=0.
+        double depthFactor = Mth.clamp((8.0D - approxY) / 72.0D, 0.0D, 1.0D);
+        sample = Mth.lerp(depthFactor, sample, sample + 120.0D);
+        if (approxY < 0) {
+            sample = Math.max(sample, 40.0D);
+        }
+
+        if (approxY >= 0) {
+            return sample;
+        }
+
+        // Cheese caves (large hollow pockets) — scaled closer to vanilla cheese frequency.
+        double cx = noiseX * 0.35D;
+        double cy = noiseY * 0.55D;
+        double cz = noiseZ * 0.35D;
+        double cheese = this.cheeseCaveNoise.getValue(cx, cy, cz);
+        double cheeseThreshold = 0.14D + (1.0D - depthFactor) * 0.03D;
+        if (Math.abs(cheese) < cheeseThreshold) {
+            sample = -100.0D;
+        }
+
+        // Noodle caves (tunnels).
+        double nx = noiseX * 0.75D + 40.0D;
+        double ny = noiseY * 0.95D;
+        double nz = noiseZ * 0.75D - 40.0D;
+        double noodleA = this.noodleCaveNoise.getValue(nx, ny, nz);
+        double noodleB = this.noodleCaveNoise.getValue(nx + 5.2D, ny + 1.3D, nz - 3.7D);
+        double noodle = Math.sqrt(noodleA * noodleA + noodleB * noodleB);
+        if (noodle < 0.10D) {
+            sample = -110.0D;
+        }
+
+        // Keep a solid band above bedrock so caves cannot open into the floor.
+        if (approxY <= terrainMinY + 6) {
+            sample = Math.max(sample, 80.0D);
+        }
+
+        return sample;
     }
 
     private double randomDensityOffset(int noiseX, int noiseZ) {

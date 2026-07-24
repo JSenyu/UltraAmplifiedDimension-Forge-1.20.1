@@ -84,9 +84,9 @@ public class Pond extends Feature<PondConfig> {
                                 blockpos.move(Direction.DOWN);
 
                                 if (aboveState.isAir()) {
-                                    cachedChunk.setBlockState(blockpos, pondConfig.topState, false);
+                                    GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.topState);
                                 } else {
-                                    cachedChunk.setBlockState(blockpos, pondConfig.outsideState, false);
+                                    GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.outsideState);
                                 }
                             }
 
@@ -94,37 +94,44 @@ public class Pond extends Feature<PondConfig> {
                         }
 
                         if (GeneralUtils.isFullCube(level, blockpos, blockState1) || blockState1.is(BlockTags.ICE)) {
+                            if (blockState1.hasBlockEntity()) {
+                                continue;
+                            }
                             if (x == -8 || z == -8 || x == 7 || z == 7 || lakeVal > -0.48d || y == -4) {
                                 if (pondConfig.placeOutsideStateOften) {
                                     if (aboveState.isAir() || aboveState.is(Blocks.SNOW)) {
-                                        cachedChunk.setBlockState(blockpos, pondConfig.topState, false);
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.topState);
                                     } else {
-                                        cachedChunk.setBlockState(blockpos, pondConfig.outsideState, false);
+                                        GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.outsideState);
                                     }
                                 }
                             } else if (y <= 0) {
-                                cachedChunk.setBlockState(blockpos, pondConfig.insideState, false);
+                                GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.insideState);
 
                                 for (Direction direction : Direction.values()) {
                                     if (direction != Direction.UP) {
                                         BlockState blockState = cachedChunk.getBlockState(blockpos.move(direction));
-                                        if (!GeneralUtils.isFullCube(level, blockpos, blockState) && blockState != pondConfig.insideState) {
-                                            cachedChunk.setBlockState(blockpos, pondConfig.outsideState, false);
+                                        if (!blockState.hasBlockEntity()
+                                                && !GeneralUtils.isFullCube(level, blockpos, blockState)
+                                                && blockState != pondConfig.insideState) {
+                                            GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.outsideState);
                                         }
                                         blockpos.move(direction.getOpposite());
                                     } else if (!pondConfig.insideState.getFluidState().isEmpty()) {
                                         BlockState blockState = cachedChunk.getBlockState(blockpos.move(direction));
-                                        if (!blockState.getFluidState().isEmpty() && blockState != pondConfig.insideState) {
-                                            cachedChunk.setBlockState(blockpos, pondConfig.outsideState, false);
+                                        if (!blockState.hasBlockEntity()
+                                                && !blockState.getFluidState().isEmpty()
+                                                && blockState != pondConfig.insideState) {
+                                            GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.outsideState);
                                         }
                                         blockpos.move(direction.getOpposite());
                                     }
                                 }
                             } else {
                                 if (!aboveState.getFluidState().isEmpty()) {
-                                    cachedChunk.setBlockState(blockpos, pondConfig.outsideState, false);
+                                    GeneralUtils.setChunkBlockState(cachedChunk, blockpos, pondConfig.outsideState);
                                 } else {
-                                    cachedChunk.setBlockState(blockpos, Blocks.CAVE_AIR.defaultBlockState(), false);
+                                    GeneralUtils.setChunkBlockState(cachedChunk, blockpos, Blocks.CAVE_AIR.defaultBlockState());
                                 }
                             }
 
@@ -132,7 +139,7 @@ public class Pond extends Feature<PondConfig> {
                             while (blockpos.getY() <= level.getMaxBuildHeight()
                                     && !GeneralUtils.isSolidBlock(plantCheckState)
                                     && !plantCheckState.canSurvive(level, blockpos)) {
-                                cachedChunk.setBlockState(blockpos, Blocks.AIR.defaultBlockState(), false);
+                                GeneralUtils.setChunkBlockState(cachedChunk, blockpos, Blocks.AIR.defaultBlockState());
                                 blockpos.move(Direction.UP);
                                 plantCheckState = cachedChunk.getBlockState(blockpos);
                             }
